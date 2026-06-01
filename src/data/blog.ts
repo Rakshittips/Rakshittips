@@ -8,12 +8,6 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-let post = await getPost(params.slug);
-
-if (!post || !post.metadata) {
-  notFound();
-}
-
 export async function getPost(slug: string) {
   const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
 
