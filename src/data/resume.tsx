@@ -1,5 +1,6 @@
+import React from "react";
 import { Icons } from "@/components/icons";
-import { HomeIcon, NotebookIcon, Video } from "lucide-react";
+import { HomeIcon, NotebookIcon } from "lucide-react";
 
 export const DATA = {
   // sara data
