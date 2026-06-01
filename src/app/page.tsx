@@ -9,6 +9,12 @@ import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
+let post = await getPost(params.slug);
+
+if (!post || !post.metadata) {
+  notFound();
+}
+
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
