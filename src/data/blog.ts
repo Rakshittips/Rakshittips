@@ -8,12 +8,36 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-type Metadata = {
-  title: string;
-  publishedAt: string;
-  summary: string;
-  image?: string;
-};
+let post = await getPost(params.slug);
+
+if (!post || !post.metadata) {
+  notFound();
+}
+
+export async function getPost(slug: string) {
+  const filePath = path.join(process.cwd(), "content", `${slug}.mdx`);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Post not found: ${slug}`);
+  }
+
+  const source = fs.readFileSync(filePath, "utf-8");
+
+  const {
+    content: rawContent,
+    data,
+  } = matter(source);
+
+  const metadata = data as Metadata;
+
+  const content = await markdownToHTML(rawContent);
+
+  return {
+    source: content,
+    metadata,
+    slug,
+  };
+    }
 
 function getMDXFiles(dir: string) {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
