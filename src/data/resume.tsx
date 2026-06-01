@@ -5,6 +5,10 @@ export const DATA = {
   // sara data
 };
 
+import React from "react";
+import { Icons } from "@/components/icons";
+import { HomeIcon, NotebookIcon } from "lucide-react";
+
 export default DATA;
   name: "Krishna.sh executing...",
   initials: "DV",
@@ -270,7 +274,7 @@ export default DATA;
       links: [
         {
           title: "Github",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/cryptotrends/cryptotrends",
         },
       ],
@@ -288,22 +292,22 @@ export default DATA;
       links: [
         {
           title: "Devpost",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://devpost.com/software/my6footprint",
         },
         {
           title: "ML",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/Wallet6/my6footprint-machine-learning",
         },
         {
           title: "iOS",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/Wallet6/CarbonWallet",
         },
         {
           title: "Server",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/Wallet6/wallet6-server",
         },
       ],
@@ -319,7 +323,7 @@ export default DATA;
       links: [
         {
           title: "Organization",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/ethdocnet",
         },
       ],
@@ -336,12 +340,12 @@ export default DATA;
       links: [
         {
           title: "Streamer Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/justinmichaud/htn2017",
         },
         {
           title: "Client Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/RTSPClient",
         },
       ],
@@ -358,12 +362,12 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/ShareShip/ShareShip",
         },
         {
           title: "Site",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://share-ship.herokuapp.com/",
         },
       ],
@@ -379,7 +383,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/nsagirlfriend/nsagirlfriend",
         },
       ],
@@ -396,12 +400,12 @@ export default DATA;
       links: [
         {
           title: "Article",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://syncedreview.com/2017/06/26/global-ai-hackathon-in-toronto/",
         },
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/TinySamosas/",
         },
       ],
@@ -428,7 +432,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/genecis",
         },
       ],
@@ -444,22 +448,22 @@ export default DATA;
       links: [
         {
           title: "Medium Article",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://medium.com/make-school/the-winners-of-make-schools-student-app-competition-2017-a6b0e72f190a",
         },
         {
           title: "Devpost",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://devpost.com/software/pocketdoc-react-native",
         },
         {
           title: "YouTube",
-          icon: <Icons.youtube className="h-4 w-4" />,
+          icon: <Icons.youtube className="size-3" />
           href: "https://www.youtube.com/watch?v=XwFdn5Rmx68",
         },
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/pocketdoc-react-native",
         },
       ],
@@ -484,17 +488,17 @@ export default DATA;
       links: [
         {
           title: "Devpost",
-          icon: <Icons.globe className="h-4 w-4" />,
+          icon: <Icons.globe className="size-3" />
           href: "https://devpost.com/software/pocketdoc-react-native",
         },
         {
           title: "YouTube",
-          icon: <Icons.youtube className="h-4 w-4" />,
+          icon: <Icons.youtube className="size-3" />
           href: "https://www.youtube.com/watch?v=XwFdn5Rmx68",
         },
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/pocketdoc-react-native",
         },
       ],
@@ -510,7 +514,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/earthwatch",
         },
       ],
@@ -527,7 +531,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/threejs-planes",
         },
       ],
@@ -545,12 +549,12 @@ export default DATA;
       links: [
         {
           title: "Source (Mobile)",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/mattBlackDesign/recipic-ionic",
         },
         {
           title: "Source (Server)",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/mattBlackDesign/recipic-rails",
         },
       ],
@@ -567,12 +571,12 @@ export default DATA;
       links: [
         {
           title: "Source (Mobile)",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/dillionverma/human-huntr-react-native",
         },
         {
           title: "Source (API)",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/mattBlackDesign/human-huntr-rails",
         },
       ],
@@ -588,7 +592,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />,
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/justinmichaud/TerribleHacks2016-Windows11",
         },
       ],
@@ -604,7 +608,7 @@ export default DATA;
       links: [
         {
           title: "Source",
-          icon: <Icons.github className="h-4 w-4" />
+          icon: <Icons.github className="size-3" />
           href: "https://github.com/UWPortalSDK/crowmark",
         },
       ],
