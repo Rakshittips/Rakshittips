@@ -44,26 +44,6 @@ z-index:-1;
 overflow:hidden;
 }
 
-.tech-stack{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:18px;
-}
-
-.tech-item{
-width:78px;
-height:78px;
-border-radius:24px;
-background:var(--surface-2);
-border:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:1.9rem;
-backdrop-filter:blur(16px);
-transition:.25s ease;
-
 .orb{
 position:absolute;
 border-radius:999px;
@@ -247,6 +227,13 @@ gap:10px;
 transition:.25s ease;
 }
 
+.tech-stack{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:18px;
+}
+
 .btn-primary{
 background:linear-gradient(135deg,var(--blue),var(--purple));
 color:white;
@@ -358,6 +345,25 @@ display:flex;
 justify-content:center;
 flex-wrap:wrap;
 gap:18px;
+}
+
+.tech-item{
+width:78px;
+height:78px;
+border-radius:24px;
+background:var(--surface-2);
+border:1px solid var(--border);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:1.9rem;
+backdrop-filter:blur(16px);
+transition:.25s ease;
+}
+
+.tech-item:hover{
+transform:translateY(-5px);
+background:rgba(255,255,255,.08);
 }
 
 .skills-pills{
@@ -574,6 +580,7 @@ Owner Rakshittips!
 <div class="container"><div class="hero-badge">
 <i class="fa-solid fa-sparkles"></i>
 Android Modding • Web Development • Open-Source Projects!
+<i class="fa-solid fa-code"></i>
 </div><div class="hero-avatar">
 <img src="https://i.ibb.co/CpMg4bgX/Me.png" alt="Founder" class="hero-avatar-img">
 </div><h1>
