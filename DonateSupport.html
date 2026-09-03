@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Rakshittips</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050308;
+    --glass:rgba(255,255,255,0.06);
+    --glass-hover:rgba(255,255,255,0.10);
+    --glass-border:rgba(255,255,255,0.14);
+    --glass-border-hi:rgba(236,72,153,0.55);
+    --glass-sheen:rgba(255,255,255,0.35);
+    --text:#f6f2fc;
+    --text-dim:#b3a5c9;
+    --grad: linear-gradient(120deg,#8b5cf6 0%,#ec4899 55%,#f97316 100%);
+    --grad-soft: linear-gradient(120deg,rgba(139,92,246,0.22),rgba(236,72,153,0.22) 55%,rgba(249,115,22,0.16));
+    --blur: blur(24px) saturate(180%);
+    /* iOS system easing curves — transform/opacity only, GPU-compositable */
+    --ease-ios: cubic-bezier(0.32,0.72,0,1);
+    --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+    --ease-out: cubic-bezier(0.22,1,0.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Ambient glow layer — animated purely with transform on an oversized
+     background so the compositor can run it off the main thread at 60fps
+     (filter/hue-rotate on a viewport-sized element forces slow repaints). */
+  body::before{
+    content:'';
+    position:fixed;
+    top:-25%;left:-25%;right:-25%;bottom:-25%;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(139,92,246,0.38), transparent 38%),
+      radial-gradient(circle at 80% 25%, rgba(236,72,153,0.32), transparent 38%),
+      radial-gradient(circle at 35% 65%, rgba(59,130,246,0.20), transparent 40%),
+      radial-gradient(circle at 75% 85%, rgba(249,115,22,0.26), transparent 42%);
+    pointer-events:none;
+    z-index:0;
+    will-change:transform;
+    transform:translateZ(0);
+    animation:driftGlow 26s var(--ease-ios) infinite alternate;
+  }
+  @keyframes driftGlow{
+    from{ transform:translate3d(0,0,0) scale(1); }
+    to{ transform:translate3d(-3%,2%,0) scale(1.06); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    body::before{ animation:none; }
+  }
+
+  /* Base glass surface, reused by every card/pill/button */
+  .glass{
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 var(--glass-sheen),
+      inset 0 0 24px rgba(255,255,255,0.03),
+      0 8px 32px -12px rgba(0,0,0,0.55);
+  }
+
+  /* Interactive surfaces get their own compositor layer so hover/press
+     transforms don't trigger layout or repaint the frosted glass under them. */
+  .method, .stat, .amount-card, .lang-btn, .copy-btn, .donate-btn,
+  .lang-item, .lang-close, .footer .socials a{
+    will-change:transform;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:64px 24px 96px;position:relative;z-index:1;}
+
+  .header-row{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:64px;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Syne',sans-serif;font-weight:700;font-size:18px;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--grad);
+    box-shadow:0 0 0 5px rgba(236,72,153,0.10);
+  }
+  .lang-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 6px 18px -8px rgba(0,0,0,0.5);
+    color:var(--text-dim);
+    font-size:14px;
+    cursor:pointer;
+    transition:transform .35s var(--ease-spring), border-color .2s var(--ease-ios), color .2s var(--ease-ios), background .2s var(--ease-ios);
+  }
+  .lang-btn:hover{border-color:var(--glass-border-hi);color:var(--text);background:var(--glass-hover);transform:translateY(-1px);}
+  .lang-btn:active{transform:scale(0.92);transition:transform .12s var(--ease-ios);}
+  .lang-btn:focus-visible{outline:2px solid #ec4899;outline-offset:2px;}
+
+  .lang-overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(5,3,10,0.55);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    padding:0;
+  }
+  .lang-overlay.open{display:flex;}
+  .lang-modal{
+    width:100%;max-width:520px;
+    max-height:80vh;
+    background:rgba(21,15,32,0.55);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 -12px 40px -12px rgba(0,0,0,0.6);
+    border-bottom:none;
+    border-radius:28px 28px 0 0;
+    padding:26px 24px 20px;
+    display:flex;flex-direction:column;
+    animation:slideUp .4s var(--ease-out);
+  }
+  @media (min-width:560px){
+    .lang-overlay{align-items:center;padding:24px;}
+    .lang-modal{border-radius:26px;border-bottom:1px solid var(--glass-border);max-height:78vh;}
+  }
+  @keyframes slideUp{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .lang-modal-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  }
+  .lang-modal-head h2{
+    font-family:'Syne',sans-serif;font-weight:700;font-size:19px;
+  }
+  .lang-modal-head p{
+    font-size:13px;color:var(--text-dim);margin-top:5px;
+  }
+  .lang-close{
+    background:rgba(255,255,255,0.08);
+    border:1px solid var(--glass-border);
+    color:var(--text-dim);
+    width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;cursor:pointer;flex-shrink:0;
+    transition:color .2s var(--ease-ios), background .2s var(--ease-ios), transform .3s var(--ease-spring);
+  }
+  .lang-close:hover{color:var(--text);background:rgba(255,255,255,0.14);}
+  .lang-close:active{transform:scale(0.88);}
+  .lang-list{
+    margin-top:18px;
+    overflow-y:auto;
+    display:flex;flex-direction:column;gap:4px;
+    padding-right:2px;
+  }
+  .lang-item{
+    display:flex;align-items:center;gap:14px;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1px solid transparent;
+    cursor:pointer;
+    background:transparent;
+    width:100%;
+    text-align:left;
+    color:var(--text);
+    font-family:inherit;font-size:15px;
+    transition:background .18s var(--ease-ios), border-color .18s var(--ease-ios), transform .25s var(--ease-spring);
+  }
+  .lang-item:hover{background:rgba(255,255,255,0.08);}
+  .lang-item:active{transform:scale(0.98);}
+  .lang-item.active{background:rgba(255,255,255,0.10);border-color:var(--glass-border-hi);}
+  .lang-flag{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;flex-shrink:0;
+    background:rgba(255,255,255,0.08);
+  }
+  .lang-item .check{margin-left:auto;color:#ec4899;font-size:14px;opacity:0;}
+  .lang-item.active .check{opacity:1;}
+
+  .hero{opacity:0;transform:translate3d(0,14px,0);animation:rise .7s var(--ease-out) forwards;}
+  .hero h1{
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:clamp(34px,6.4vw,48px);
+    line-height:1.1;
+    letter-spacing:-0.015em;
+    max-width:13ch;
+    background:linear-gradient(100deg,#ffffff 40%,#c9b8e8 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{
+    margin-top:20px;
+    color:var(--text-dim);
+    font-size:16px;
+    max-width:46ch;
+  }
+
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){
+    .hero{animation:none;opacity:1;transform:none;}
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:48px 0 52px;
+  }
+  .stat{
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 6px 20px -10px rgba(0,0,0,0.5);
+    border-radius:18px;
+    padding:22px 16px;
+    transition:transform .3s var(--ease-spring), border-color .25s var(--ease-ios);
+  }
+  .stat:hover{transform:translateY(-2px);border-color:var(--glass-border-hi);}
+  .stat:active{transform:scale(0.97);}
+  .stat .num{font-family:'Syne',sans-serif;font-weight:700;font-size:25px;}
+  .stat .label{font-size:12.5px;color:var(--text-dim);margin-top:5px;}
+
+  .section-label{
+    font-size:13px;
+    color:var(--text-dim);
+    margin-bottom:16px;
+  }
+
+  .methods{display:flex;flex-direction:column;gap:12px;}
+  .method{
+    display:flex;align-items:center;gap:16px;
+    padding:18px 20px;
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 8px 24px -12px rgba(0,0,0,0.5);
+    border-radius:18px;
+    text-decoration:none;
+    color:var(--text);
+    transition:border-color .2s var(--ease-ios), background .2s var(--ease-ios), transform .3s var(--ease-spring);
+  }
+  .method:hover{
+    border-color:var(--glass-border-hi);
+    background:var(--glass-hover);
+    transform:translateX(2px) translateY(-1px);
+  }
+  .method:active{
+    transform:scale(0.98);
+    transition:transform .12s var(--ease-ios);
+  }
+  .method:focus-visible{
+    outline:2px solid #ec4899;
+    outline-offset:2px;
+  }
+  .method .icon{
+    width:42px;height:42px;border-radius:13px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--grad-soft);
+    border:1px solid rgba(255,255,255,0.12);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.25);
+    font-size:17px;
+    flex-shrink:0;
+  }
+  .method .icon i{
+    background:var(--grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .method .body{flex:1;min-width:0;}
+  .method .name{font-weight:600;font-size:15px;}
+  .method .desc{font-size:13px;color:var(--text-dim);margin-top:2px;}
+  .method .go{color:var(--text-dim);font-size:13px;flex-shrink:0;transition:color .2s var(--ease-ios), transform .3s var(--ease-spring);}
+  .method:hover .go{color:#ec4899;transform:translateX(1px);}
+
+  .upi-card{
+    margin-top:40px;
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 10px 32px -14px rgba(0,0,0,0.55);
+    border-radius:24px;
+    padding:28px;
+    display:flex;
+    gap:26px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .upi-qr{
+    width:128px;height:128px;
+    border-radius:16px;
+    background:#fff;
+    padding:8px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .upi-qr img{width:100%;height:100%;object-fit:contain;}
+  .upi-info{flex:1;min-width:180px;}
+  .upi-info .label{font-size:12.5px;color:var(--text-dim);}
+  .upi-id{
+    font-family:'Syne',sans-serif;font-weight:700;font-size:20px;
+    margin-top:5px;
+    word-break:break-all;
+  }
+  .copy-btn{
+    margin-top:16px;
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.06);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen);
+    color:var(--text);
+    padding:9px 16px;
+    border-radius:999px;
+    font-family:inherit;font-size:13.5px;font-weight:600;
+    cursor:pointer;
+    transition:border-color .2s var(--ease-ios), color .2s var(--ease-ios), background .2s var(--ease-ios);
+  }
+  .copy-btn:hover{border-color:var(--glass-border-hi);background:var(--glass-hover);}
+  .copy-btn:active{transform:scale(0.94);transition:transform .12s var(--ease-ios);}
+  .copy-btn:focus-visible{outline:2px solid #ec4899;outline-offset:2px;}
+  .copy-btn.copied{border-color:#22c55e;color:#22c55e;}
+
+  .upi-apps{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:14px;
+  }
+  .upi-apps .apps-label{
+    font-size:12px;
+    color:var(--text-dim);
+    margin-right:2px;
+  }
+  .app-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 12px;
+    border-radius:999px;
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    font-size:11.5px;
+    letter-spacing:0.01em;
+    color:#0a0612;
+    white-space:nowrap;
+    border:1px solid rgba(255,255,255,0.25);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 12px -4px rgba(0,0,0,0.5);
+  }
+  .app-badge.phonepe{ background:rgba(95,37,159,0.75); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); color:#fff; }
+  .app-badge.gpay{ background:rgba(255,255,255,0.85); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); color:#1f1f1f; }
+  .app-badge.bhim{ background:rgba(11,78,162,0.75); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); color:#fff; }
+  .app-badge.paytm{ background:rgba(0,186,242,0.75); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); color:#04202e; }
+
+  .amounts{display:flex;flex-direction:column;gap:12px;}
+  .amount-card{
+    position:relative;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:20px 22px;
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 0 var(--glass-sheen), 0 8px 24px -12px rgba(0,0,0,0.5);
+    border-radius:18px;
+    cursor:pointer;
+    transition:border-color .2s var(--ease-ios), background .2s var(--ease-ios), transform .3s var(--ease-spring);
+  }
+  .amount-card:hover{transform:translateY(-1px);}
+  .amount-card:active{transform:scale(0.98);transition:transform .12s var(--ease-ios);}
+  .amount-card input[type="radio"]{
+    position:absolute;opacity:0;width:0;height:0;
+  }
+  .amount-card:hover{border-color:var(--glass-border-hi);}
+  .amount-card:has(input:checked){
+    border-color:#ec4899;
+    background:var(--glass-hover);
+  }
+  .amount-main{display:flex;flex-direction:column;gap:6px;}
+  .amount-value{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;}
+  .amount-desc{font-size:14px;color:var(--text-dim);}
+  .radio-dot{
+    width:22px;height:22px;flex-shrink:0;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.28);
+    background:rgba(255,255,255,0.04);
+    position:relative;
+    transition:border-color .2s var(--ease-ios), transform .3s var(--ease-spring);
+  }
+  .amount-card:has(input:checked) .radio-dot{border-color:#ec4899;}
+  .amount-card:has(input:checked) .radio-dot::after{
+    content:'';
+    position:absolute;inset:4px;
+    border-radius:50%;
+    background:var(--grad);
+    animation:popIn .3s var(--ease-spring);
+  }
+  @keyframes popIn{from{transform:scale(0);}to{transform:scale(1);}}
+  .amount-card.custom{padding:16px 22px;}
+  .custom-main{
+    flex-direction:row;align-items:center;gap:10px;width:100%;
+  }
+  .rupee{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--text-dim);}
+  .custom-input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-family:'Syne',sans-serif;font-weight:700;font-size:20px;
+  }
+  .custom-input::placeholder{
+    font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;font-size:15px;color:var(--text-dim);
+  }
+
+  .donate-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-top:20px;
+    padding:18px;
+    border-radius:999px;
+    background:var(--grad);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;
+    text-decoration:none;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:700;font-size:16px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), 0 12px 32px -12px rgba(236,72,153,0.55);
+    transition:transform .3s var(--ease-spring), box-shadow .25s var(--ease-ios);
+  }
+  .donate-btn:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), 0 16px 36px -12px rgba(236,72,153,0.65);}
+  .donate-btn:active{transform:scale(0.96);transition:transform .12s var(--ease-ios);}
+  .donate-btn:focus-visible{outline:2px solid #fff;outline-offset:3px;}
+
+  .note{
+    margin-top:44px;
+    font-size:13.5px;
+    color:var(--text-dim);
+    padding:16px 18px;
+    border-left:2px solid rgba(236,72,153,0.5);
+    background:var(--glass);
+    -webkit-backdrop-filter:var(--blur);
+    backdrop-filter:var(--blur);
+    border-radius:0 14px 14px 0;
+  }
+
+  .footer{
+    margin-top:60px;
+    padding-top:28px;
+    border-top:1px solid var(--glass-border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .footer .socials{display:flex;gap:18px;}
+  .footer .socials a{
+    color:var(--text-dim);font-size:17px;text-decoration:none;
+    transition:color .2s var(--ease-ios), transform .3s var(--ease-spring);
+    display:inline-block;
+  }
+  .footer .socials a:hover{color:var(--text);transform:translateY(-2px);}
+  .footer .socials a:active{transform:scale(0.85);transition:transform .12s var(--ease-ios);}
+  .footer .socials a:focus-visible{outline:2px solid #ec4899;outline-offset:3px;border-radius:4px;}
+
+  @media (max-width:480px){
+    .stats{grid-template-columns:1fr 1fr;}
+    .stat:last-child{grid-column:span 2;}
+    .upi-card{padding:22px;gap:20px;}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="header-row">
+      <div class="brand"><span class="dot"></span>Rakshittips!</div>
+      <button class="lang-btn" id="langBtn" aria-haspopup="dialog" aria-label="Switch language" title="Switch language">
+        <i class="fa-solid fa-language"></i>
+      </button>
+    </div>
+
+    <div class="hero">
+      <h1 data-i18n="heroTitle">Keep the mods coming</h1>
+      <p data-i18n="heroP">Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the work going.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">100%</div><div class="label" data-i18n="statSolo">Solo-built</div></div>
+      <div class="stat"><div class="num" data-i18n="statFree">Free</div><div class="label" data-i18n="statAllReleases">All releases</div></div>
+      <div class="stat"><div class="num" data-i18n="statNoAds">No ads</div><div class="label" data-i18n="statEver">Ever</div></div>
+    </div>
+
+    <div class="section-label" data-i18n="waysToSupport">Ways to support</div>
+    <div class="methods">
+      <a class="method" href="#upi">
+        <div class="icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+        <div class="body">
+          <div class="name">UPI</div>
+          <div class="desc" data-i18n="upiDesc">Instant, no fees — scan below or use the ID</div>
+        </div>
+        <span class="go"><i class="fa-solid fa-arrow-down"></i></span>
+      </a>
+
+      <a class="method" href="https://paypal.me/rakshittips" target="_blank" rel="noopener">
+        <div class="icon"><i class="fa-brands fa-paypal"></i></div>
+        <div class="body">
+          <div class="name">PayPal</div>
+          <div class="desc" data-i18n="paypalDesc">One-time or recurring, international</div>
+        </div>
+        <span class="go"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+
+      <a class="method" href="https://buymeacoffee.com/rakshittips" target="_blank" rel="noopener">
+        <div class="icon"><i class="fa-solid fa-mug-hot"></i></div>
+        <div class="body">
+          <div class="name">Buy Me a Coffee</div>
+          <div class="desc" data-i18n="coffeeDesc">Quick one-off support</div>
+        </div>
+        <span class="go"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+
+      <a class="method" href="https://t.me/RakshittipsDeveloper" target="_blank" rel="noopener">
+        <div class="icon"><i class="fa-brands fa-telegram"></i></div>
+        <div class="body">
+          <div class="name" data-i18n="telegramName">Telegram DM</div>
+          <div class="desc" data-i18n="telegramDesc">Message the developer directly</div>
+        </div>
+        <span class="go"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+      </a>
+    </div>
+
+    <div class="upi-card" id="upi">
+      <div class="upi-qr">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=upi%3A%2F%2Fpay%3Fpa%3D7723944300%40fam%26pn%3DRakshittips" alt="UPI QR code">
+      </div>
+      <div class="upi-info">
+        <div class="upi-apps">
+          <span class="apps-label" data-i18n="worksWith">Works with</span>
+          <span class="app-badge phonepe">PhonePe</span>
+          <span class="app-badge gpay">GPay</span>
+          <span class="app-badge bhim">BHIM</span>
+          <span class="app-badge paytm">Paytm</span>
+        </div>
+        <a class="copy-btn" href="upi://pay?pa=7723944300@fam&pn=Rakshittips&cu=INR" style="margin-top:16px;text-decoration:none;display:inline-flex;">
+          <i class="fa-solid fa-bolt"></i><span data-i18n="openUpiApp">Open in UPI app</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:40px;" data-i18n="chooseAmount">Choose an amount</div>
+    <div class="amounts" id="amounts">
+      <label class="amount-card">
+        <input type="radio" name="amt" value="99">
+        <div class="amount-main">
+          <span class="amount-value">₹99</span>
+          <span class="amount-desc"></span>
+        </div>
+        <span class="radio-dot"></span>
+      </label>
+
+      <label class="amount-card">
+        <input type="radio" name="amt" value="299">
+        <div class="amount-main">
+          <span class="amount-value">₹299</span>
+          <span class="amount-desc"></span>
+        </div>
+        <span class="radio-dot"></span>
+      </label>
+
+      <label class="amount-card">
+        <input type="radio" name="amt" value="799">
+        <div class="amount-main">
+          <span class="amount-value">₹799</span>
+          <span class="amount-desc"></span>
+        </div>
+        <span class="radio-dot"></span>
+      </label>
+
+      <label class="amount-card custom">
+        <input type="radio" name="amt" value="custom" id="customRadio">
+        <div class="amount-main custom-main">
+          <span class="rupee">₹</span>
+          <input type="number" id="customAmt" class="custom-input" placeholder="Enter amount" min="1">
+        </div>
+      </label>
+    </div>
+
+    <a class="donate-btn" id="donateBtn" href="upi://pay?pa=7723944300@fam&pn=Rakshittips&cu=INR&am=20">
+      <i class="fa-solid fa-bolt"></i> <span id="donateLabel" data-i18n="donate">Donate</span> <span id="donateAmt">₹20</span>
+    </a>
+
+    <div class="note">
+      <i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>
+      <span data-i18n="noteText">Swap in your real PayPal link before publishing — the QR code is generated live from the UPI ID in the image URL.</span>
+    </div>
+
+    <div class="footer">
+      <span>&copy; <span id="year"></span> Rakshittips</span>
+      <div class="socials">
+        <a href="https://t.me/Rakshittips" target="_blank" rel="noopener" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+        <a href="https://youtube.com/@mr._rakshit_2.0" target="_blank" rel="noopener" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://github.com/Rakshittips" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lang-overlay" id="langOverlay" role="dialog" aria-modal="true" aria-labelledby="langModalTitle">
+    <div class="lang-modal">
+      <div class="lang-modal-head">
+        <div>
+          <h2 id="langModalTitle" data-i18n="switchLanguage">Switch Language</h2>
+          <p data-i18n="switchLanguageDesc">Change the website's display language</p>
+        </div>
+        <button class="lang-close" id="langClose" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="lang-list" id="langList"></div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const donateBtn = document.getElementById('donateBtn');
+  const donateAmt = document.getElementById('donateAmt');
+  const customAmt = document.getElementById('customAmt');
+  const customRadio = document.getElementById('customRadio');
+  const UPI_ID = '7723944300@fam';
+
+  function updateDonateBtn(amount){
+    const amt = amount && amount > 0 ? amount : 20;
+    donateAmt.textContent = `₹${amt}`;
+    donateBtn.href = `upi://pay?pa=${UPI_ID}&pn=Rakshittips&cu=INR&am=${amt}`;
+  }
+
+  document.querySelectorAll('input[name="amt"]').forEach(radio=>{
+    radio.addEventListener('change', ()=>{
+      if(radio.value === 'custom'){
+        customAmt.focus();
+        updateDonateBtn(customAmt.value);
+      } else {
+        updateDonateBtn(radio.value);
+      }
+    });
+  });
+
+  customAmt.addEventListener('input', ()=>{
+    if(customAmt.value){
+      customRadio.checked = true;
+      updateDonateBtn(customAmt.value);
+    }
+  });
+
+  function copyId(idEl, btnEl){
+    const id = document.getElementById(idEl).textContent;
+    const btn = document.getElementById(btnEl);
+    navigator.clipboard.writeText(id).then(()=>{
+      btn.classList.add('copied');
+      btn.querySelector('span').textContent = 'Copied';
+      setTimeout(()=>{
+        btn.classList.remove('copied');
+        btn.querySelector('span').textContent = 'Copy ID';
+      },1800);
+    });
+  }
+
+  /* ---------- Language switcher ---------- */
+  const LANGS = [
+    { code:'en', name:'English',               flag:'🇬🇧', rtl:false },
+    { code:'ar', name:'Arabic (Saudi Arabia)',  flag:'🇸🇦', rtl:true  },
+    { code:'az', name:'Azerbaijani',            flag:'🇦🇿', rtl:false },
+    { code:'de', name:'German',                 flag:'🇩🇪', rtl:false },
+    { code:'el', name:'Greek (Greece)',         flag:'🇬🇷', rtl:false },
+    { code:'es', name:'Spanish',                flag:'🇪🇸', rtl:false },
+    { code:'fr', name:'French',                 flag:'🇫🇷', rtl:false },
+    { code:'hi', name:'Hindi (India)',          flag:'🇮🇳', rtl:false },
+    { code:'hu', name:'Hungarian',              flag:'🇭🇺', rtl:false },
+    { code:'id', name:'Indonesian',             flag:'🇮🇩', rtl:false },
+    { code:'it', name:'Italian',                flag:'🇮🇹', rtl:false },
+    { code:'pl', name:'Polish',                 flag:'🇵🇱', rtl:false },
+    { code:'pt', name:'Brazilian Portuguese',   flag:'🇧🇷', rtl:false },
+    { code:'sr', name:'Serbian (Serbia)',       flag:'🇷🇸', rtl:false },
+    { code:'th', name:'Thai',                   flag:'🇹🇭', rtl:false }
+  ];
+
+  const I18N = {
+    en:{ switchLanguage:'Switch Language', switchLanguageDesc:"Change the website's display language",
+      heroTitle:'Keep the mods coming',
+      heroP:"Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the work going.",
+      statSolo:'Solo-built', statFree:'Free', statAllReleases:'All releases', statNoAds:'No ads', statEver:'Ever',
+      waysToSupport:'Ways to support', upiDesc:'Instant, no fees — scan below or use the ID',
+      paypalDesc:'One-time or recurring, international', coffeeDesc:'Quick one-off support',
+      telegramName:'Telegram DM', telegramDesc:'Message the developer directly',
+      worksWith:'Works with', openUpiApp:'Open in UPI app', chooseAmount:'Choose an amount',
+      donate:'Donate', noteText:'Swap in your real PayPal link before publishing — the QR code is generated live from the UPI ID in the image URL.' },
+    ar:{ switchLanguage:'تبديل اللغة', switchLanguageDesc:'غيّر لغة عرض الموقع',
+      heroTitle:'استمر في دعم التعديلات',
+      heroP:'كل إصدار وتحديث وصفحة هنا صُنعت بشكل فردي — بلا فريق وبلا ميزانية إعلانات. إذا وفّر لك شيء صنعته وقتًا أو أتاح لك ميزة أردتها، فمساهمة صغيرة تُبقي العمل مستمرًا.',
+      statSolo:'صُنع فرديًا', statFree:'مجاني', statAllReleases:'كل الإصدارات', statNoAds:'بلا إعلانات', statEver:'أبدًا',
+      waysToSupport:'طرق الدعم', upiDesc:'فوري وبدون رسوم — امسح الرمز أدناه أو استخدم المعرف',
+      paypalDesc:'دفعة واحدة أو متكررة، دوليًا', coffeeDesc:'دعم سريع لمرة واحدة',
+      telegramName:'مراسلة عبر تيليجرام', telegramDesc:'راسل المطور مباشرة',
+      worksWith:'يعمل مع', openUpiApp:'فتح في تطبيق UPI', chooseAmount:'اختر مبلغًا',
+      donate:'تبرّع', noteText:'استبدل رابط PayPal الحقيقي قبل النشر — رمز الاستجابة السريعة يُنشأ مباشرة من معرف UPI في رابط الصورة.' },
+    az:{ switchLanguage:'Dili dəyiş', switchLanguageDesc:'Saytın göstərilmə dilini dəyişin',
+      heroTitle:'Modları dəstəkləməyə davam edin',
+      heroP:'Buradakı hər versiya, yamaq və açılış səhifəsi tək başına hazırlanıb — nə komanda, nə də reklam büdcəsi var. Hazırladığım bir şey vaxtınıza qənaət etdirdisə və ya istədiyiniz funksiyanı açdısa, kiçik bir dəstək işi davam etdirir.',
+      statSolo:'Tək başına', statFree:'Pulsuz', statAllReleases:'Bütün buraxılışlar', statNoAds:'Reklamsız', statEver:'Heç vaxt',
+      waysToSupport:'Dəstək yolları', upiDesc:'Ani, komissiyasız — aşağıdan skan edin və ya ID istifadə edin',
+      paypalDesc:'Birdəfəlik və ya təkrarlanan, beynəlxalq', coffeeDesc:'Tez birdəfəlik dəstək',
+      telegramName:'Telegram DM', telegramDesc:'Tərtibatçıya birbaşa yazın',
+      worksWith:'Uyğun tətbiqlər', openUpiApp:'UPI tətbiqində aç', chooseAmount:'Məbləğ seçin',
+      donate:'Dəstək ol', noteText:'Nəşrdən əvvəl əsl PayPal linkinizi yerləşdirin — QR kod şəkil linkindəki UPI ID-dən canlı yaradılır.' },
+    de:{ switchLanguage:'Sprache wechseln', switchLanguageDesc:'Anzeigesprache der Website ändern',
+      heroTitle:'Die Mods am Leben erhalten',
+      heroP:'Jeder Build, jeder Patch und jede Landingpage hier entsteht solo — kein Team, kein Werbebudget. Wenn dir etwas Zeit gespart oder eine gewünschte Funktion freigeschaltet hat, hält ein kleiner Beitrag die Arbeit am Laufen.',
+      statSolo:'Solo entwickelt', statFree:'Kostenlos', statAllReleases:'Alle Releases', statNoAds:'Keine Werbung', statEver:'Niemals',
+      waysToSupport:'Unterstützungsmöglichkeiten', upiDesc:'Sofort, gebührenfrei — scannen oder ID verwenden',
+      paypalDesc:'Einmalig oder wiederkehrend, international', coffeeDesc:'Schnelle einmalige Unterstützung',
+      telegramName:'Telegram-DM', telegramDesc:'Schreib dem Entwickler direkt',
+      worksWith:'Funktioniert mit', openUpiApp:'In UPI-App öffnen', chooseAmount:'Betrag wählen',
+      donate:'Spenden', noteText:'Ersetze den echten PayPal-Link vor der Veröffentlichung — der QR-Code wird live aus der UPI-ID in der Bild-URL erzeugt.' },
+    el:{ switchLanguage:'Αλλαγή γλώσσας', switchLanguageDesc:'Αλλάξτε τη γλώσσα εμφάνισης του ιστότοπου',
+      heroTitle:'Κρατήστε τα mods ζωντανά',
+      heroP:'Κάθε build, patch και σελίδα εδώ φτιάχνεται μόνος μου — χωρίς ομάδα, χωρίς διαφημιστικό budget. Αν κάτι που έφτιαξα σου γλίτωσε χρόνο ή σου ξεκλείδωσε μια λειτουργία, μια μικρή συνεισφορά κρατά τη δουλειά να συνεχίζεται.',
+      statSolo:'Φτιαγμένο μόνος', statFree:'Δωρεάν', statAllReleases:'Όλες οι εκδόσεις', statNoAds:'Χωρίς διαφημίσεις', statEver:'Ποτέ',
+      waysToSupport:'Τρόποι υποστήριξης', upiDesc:'Άμεσα, χωρίς χρεώσεις — σκανάρετε παρακάτω ή χρησιμοποιήστε το ID',
+      paypalDesc:'Εφάπαξ ή επαναλαμβανόμενη, διεθνώς', coffeeDesc:'Γρήγορη μεμονωμένη υποστήριξη',
+      telegramName:'Telegram DM', telegramDesc:'Στείλτε μήνυμα απευθείας στον προγραμματιστή',
+      worksWith:'Λειτουργεί με', openUpiApp:'Άνοιγμα σε εφαρμογή UPI', chooseAmount:'Επιλέξτε ποσό',
+      donate:'Δωρεά', noteText:'Αντικαταστήστε τον πραγματικό σύνδεσμο PayPal πριν τη δημοσίευση — ο κωδικός QR δημιουργείται ζωντανά από το UPI ID στη διεύθυνση της εικόνας.' },
+    es:{ switchLanguage:'Cambiar idioma', switchLanguageDesc:'Cambia el idioma de visualización del sitio',
+      heroTitle:'Mantén los mods en marcha',
+      heroP:'Cada build, parche y página aquí se hace en solitario — sin equipo, sin presupuesto de publicidad. Si algo que hice te ahorró tiempo o desbloqueó una función que querías, una pequeña contribución mantiene el trabajo en marcha.',
+      statSolo:'Hecho en solitario', statFree:'Gratis', statAllReleases:'Todos los lanzamientos', statNoAds:'Sin anuncios', statEver:'Nunca',
+      waysToSupport:'Formas de apoyar', upiDesc:'Instantáneo, sin comisiones — escanea abajo o usa el ID',
+      paypalDesc:'Único o recurrente, internacional', coffeeDesc:'Apoyo rápido de una sola vez',
+      telegramName:'DM en Telegram', telegramDesc:'Escribe directamente al desarrollador',
+      worksWith:'Compatible con', openUpiApp:'Abrir en la app UPI', chooseAmount:'Elige un monto',
+      donate:'Donar', noteText:'Sustituye tu enlace real de PayPal antes de publicar — el código QR se genera en vivo a partir del ID de UPI en la URL de la imagen.' },
+    fr:{ switchLanguage:'Changer de langue', switchLanguageDesc:'Modifier la langue d’affichage du site',
+      heroTitle:'Faites vivre les mods',
+      heroP:"Chaque build, patch et page ici est réalisé en solo — sans équipe, sans budget publicitaire. Si quelque chose que j'ai créé vous a fait gagner du temps ou débloqué une fonctionnalité voulue, une petite contribution permet de continuer.",
+      statSolo:'Fait en solo', statFree:'Gratuit', statAllReleases:'Toutes les versions', statNoAds:'Sans pub', statEver:'Jamais',
+      waysToSupport:'Façons de soutenir', upiDesc:'Instantané, sans frais — scannez ci-dessous ou utilisez l’ID',
+      paypalDesc:'Ponctuel ou récurrent, international', coffeeDesc:'Soutien rapide ponctuel',
+      telegramName:'DM Telegram', telegramDesc:'Écrivez directement au développeur',
+      worksWith:'Compatible avec', openUpiApp:'Ouvrir dans l’appli UPI', chooseAmount:'Choisir un montant',
+      donate:'Faire un don', noteText:'Remplacez le vrai lien PayPal avant publication — le QR code est généré en direct à partir de l’ID UPI dans l’URL de l’image.' },
+    hi:{ switchLanguage:'भाषा बदलें', switchLanguageDesc:'वेबसाइट की प्रदर्शन भाषा बदलें',
+      heroTitle:'मॉड्स को जारी रखें',
+      heroP:'यहाँ हर बिल्ड, पैच और लैंडिंग पेज अकेले बनाया गया है — न कोई टीम, न विज्ञापन बजट। अगर मेरी बनाई किसी चीज़ ने आपका समय बचाया या कोई फीचर अनलॉक किया, तो एक छोटा योगदान काम जारी रखने में मदद करता है।',
+      statSolo:'अकेले बनाया गया', statFree:'मुफ़्त', statAllReleases:'सभी रिलीज़', statNoAds:'बिना विज्ञापन', statEver:'हमेशा',
+      waysToSupport:'सहयोग के तरीके', upiDesc:'तुरंत, बिना शुल्क — नीचे स्कैन करें या ID का उपयोग करें',
+      paypalDesc:'एक बार या आवर्ती, अंतरराष्ट्रीय', coffeeDesc:'त्वरित एक बार का सहयोग',
+      telegramName:'Telegram DM', telegramDesc:'डेवलपर को सीधे संदेश भेजें',
+      worksWith:'इनके साथ काम करता है', openUpiApp:'UPI ऐप में खोलें', chooseAmount:'राशि चुनें',
+      donate:'दान करें', noteText:'प्रकाशित करने से पहले अपना असली PayPal लिंक डालें — QR कोड इमेज URL में मौजूद UPI ID से लाइव जनरेट होता है।' },
+    hu:{ switchLanguage:'Nyelv váltása', switchLanguageDesc:'A weboldal megjelenítési nyelvének módosítása',
+      heroTitle:'Tartsd életben a modokat',
+      heroP:'Minden build, patch és landing oldal itt egyedül készül — csapat és hirdetési keret nélkül. Ha valami, amit készítettem, időt spórolt neked, vagy egy kívánt funkciót nyitott meg, egy kis hozzájárulás fenntartja a munkát.',
+      statSolo:'Egyedül készült', statFree:'Ingyenes', statAllReleases:'Minden kiadás', statNoAds:'Hirdetésmentes', statEver:'Soha',
+      waysToSupport:'Támogatási módok', upiDesc:'Azonnali, díjmentes — szkenneld be lent vagy használd az ID-t',
+      paypalDesc:'Egyszeri vagy ismétlődő, nemzetközi', coffeeDesc:'Gyors, egyszeri támogatás',
+      telegramName:'Telegram DM', telegramDesc:'Írj közvetlenül a fejlesztőnek',
+      worksWith:'Ezekkel működik', openUpiApp:'Megnyitás UPI appban', chooseAmount:'Válassz összeget',
+      donate:'Adományozás', noteText:'Publikálás előtt cseréld ki a valódi PayPal linkedre — a QR-kód a kép URL-jében lévő UPI ID-ból generálódik élőben.' },
+    id:{ switchLanguage:'Ganti Bahasa', switchLanguageDesc:'Ubah bahasa tampilan situs',
+      heroTitle:'Terus dukung mod ini',
+      heroP:'Setiap build, patch, dan halaman landing di sini dibuat sendirian — tanpa tim, tanpa anggaran iklan. Jika sesuatu yang saya buat menghemat waktumu atau membuka fitur yang kamu inginkan, kontribusi kecil membantu pekerjaan ini terus berjalan.',
+      statSolo:'Dibuat sendiri', statFree:'Gratis', statAllReleases:'Semua rilis', statNoAds:'Tanpa iklan', statEver:'Selamanya',
+      waysToSupport:'Cara mendukung', upiDesc:'Instan, tanpa biaya — pindai di bawah atau gunakan ID',
+      paypalDesc:'Sekali atau berulang, internasional', coffeeDesc:'Dukungan cepat satu kali',
+      telegramName:'DM Telegram', telegramDesc:'Kirim pesan langsung ke developer',
+      worksWith:'Berfungsi dengan', openUpiApp:'Buka di aplikasi UPI', chooseAmount:'Pilih jumlah',
+      donate:'Donasi', noteText:'Ganti dengan tautan PayPal aslimu sebelum dipublikasikan — kode QR dibuat langsung dari ID UPI di URL gambar.' },
+    it:{ switchLanguage:'Cambia lingua', switchLanguageDesc:'Cambia la lingua di visualizzazione del sito',
+      heroTitle:'Tieni vivi i mod',
+      heroP:'Ogni build, patch e landing page qui è realizzata in solitaria — niente team, niente budget pubblicitario. Se qualcosa che ho creato ti ha fatto risparmiare tempo o sbloccato una funzione desiderata, un piccolo contributo tiene vivo il lavoro.',
+      statSolo:'Creato in solitaria', statFree:'Gratis', statAllReleases:'Tutte le release', statNoAds:'Senza pubblicità', statEver:'Mai',
+      waysToSupport:'Modi per sostenere', upiDesc:'Istantaneo, senza commissioni — scansiona qui sotto o usa l’ID',
+      paypalDesc:'Una tantum o ricorrente, internazionale', coffeeDesc:'Supporto rapido una tantum',
+      telegramName:'DM Telegram', telegramDesc:'Scrivi direttamente allo sviluppatore',
+      worksWith:'Compatibile con', openUpiApp:'Apri nell’app UPI', chooseAmount:'Scegli un importo',
+      donate:'Dona', noteText:'Sostituisci il link PayPal reale prima della pubblicazione — il codice QR è generato in tempo reale dall’ID UPI nell’URL dell’immagine.' },
+    pl:{ switchLanguage:'Zmień język', switchLanguageDesc:'Zmień język wyświetlania strony',
+      heroTitle:'Wspieraj rozwój modów',
+      heroP:'Każdy build, patch i strona tutaj powstają solo — bez zespołu, bez budżetu reklamowego. Jeśli coś, co stworzyłem, zaoszczędziło ci czas albo odblokowało funkcję, drobny wkład pozwala kontynuować pracę.',
+      statSolo:'Tworzone solo', statFree:'Za darmo', statAllReleases:'Wszystkie wydania', statNoAds:'Bez reklam', statEver:'Nigdy',
+      waysToSupport:'Sposoby wsparcia', upiDesc:'Natychmiastowo, bez opłat — zeskanuj poniżej lub użyj ID',
+      paypalDesc:'Jednorazowo lub cyklicznie, międzynarodowo', coffeeDesc:'Szybkie jednorazowe wsparcie',
+      telegramName:'Telegram DM', telegramDesc:'Napisz bezpośrednio do dewelopera',
+      worksWith:'Działa z', openUpiApp:'Otwórz w aplikacji UPI', chooseAmount:'Wybierz kwotę',
+      donate:'Wesprzyj', noteText:'Podmień prawdziwy link PayPal przed publikacją — kod QR jest generowany na żywo z ID UPI w adresie URL obrazu.' },
+    pt:{ switchLanguage:'Trocar idioma', switchLanguageDesc:'Altere o idioma de exibição do site',
+      heroTitle:'Mantenha os mods vivos',
+      heroP:'Cada build, patch e landing page aqui é feita sozinho — sem equipe, sem verba de anúncios. Se algo que eu fiz economizou seu tempo ou destravou um recurso que você queria, uma pequena contribuição mantém o trabalho em andamento.',
+      statSolo:'Feito sozinho', statFree:'Grátis', statAllReleases:'Todos os lançamentos', statNoAds:'Sem anúncios', statEver:'Nunca',
+      waysToSupport:'Formas de apoiar', upiDesc:'Instantâneo, sem taxas — escaneie abaixo ou use o ID',
+      paypalDesc:'Único ou recorrente, internacional', coffeeDesc:'Apoio rápido único',
+      telegramName:'DM no Telegram', telegramDesc:'Envie mensagem direta ao desenvolvedor',
+      worksWith:'Funciona com', openUpiApp:'Abrir no app UPI', chooseAmount:'Escolha um valor',
+      donate:'Doar', noteText:'Substitua pelo seu link real do PayPal antes de publicar — o QR code é gerado ao vivo a partir do ID UPI na URL da imagem.' },
+    sr:{ switchLanguage:'Промени језик', switchLanguageDesc:'Промените језик приказа сајта',
+      heroTitle:'Одржите модове у животу',
+      heroP:'Свака верзија, закрпа и почетна страница овде је направљена соло — без тима, без буџета за рекламе. Ако вам је нешто што сам направио уштедело време или откључало жељену функцију, мали допринос одржава рад у току.',
+      statSolo:'Соло направљено', statFree:'Бесплатно', statAllReleases:'Сва издања', statNoAds:'Без реклама', statEver:'Никада',
+      waysToSupport:'Начини подршке', upiDesc:'Тренутно, без накнада — скенирајте испод или користите ID',
+      paypalDesc:'Једнократно или периодично, међународно', coffeeDesc:'Брза једнократна подршка',
+      telegramName:'Telegram DM', telegramDesc:'Пишите директно developeру',
+      worksWith:'Ради са', openUpiApp:'Отвори у UPI апликацији', chooseAmount:'Изаберите износ',
+      donate:'Донирај', noteText:'Замените стварним PayPal линком пре објављивања — QR код се генерише уживо из UPI ID-а у URL-у слике.' },
+    th:{ switchLanguage:'เปลี่ยนภาษา', switchLanguageDesc:'เปลี่ยนภาษาที่แสดงบนเว็บไซต์',
+      heroTitle:'ร่วมสนับสนุนมอดต่อไป',
+      heroP:'ทุกบิลด์ แพตช์ และหน้าเว็บที่นี่ทำขึ้นเพียงคนเดียว — ไม่มีทีม ไม่มีงบโฆษณา หากสิ่งที่ผมสร้างช่วยประหยัดเวลาหรือปลดล็อกฟีเจอร์ที่คุณต้องการ การสนับสนุนเล็กๆ น้อยๆ ช่วยให้งานนี้ดำเนินต่อไปได้',
+      statSolo:'ทำคนเดียว', statFree:'ฟรี', statAllReleases:'ทุกเวอร์ชัน', statNoAds:'ไม่มีโฆษณา', statEver:'ตลอดไป',
+      waysToSupport:'วิธีสนับสนุน', upiDesc:'รวดเร็ว ไม่มีค่าธรรมเนียม — สแกนด้านล่างหรือใช้ ID',
+      paypalDesc:'ครั้งเดียวหรือประจำ ระดับนานาชาติ', coffeeDesc:'สนับสนุนแบบรวดเร็วครั้งเดียว',
+      telegramName:'ทัก Telegram', telegramDesc:'ส่งข้อความถึงผู้พัฒนาโดยตรง',
+      worksWith:'ใช้งานร่วมกับ', openUpiApp:'เปิดในแอป UPI', chooseAmount:'เลือกจำนวนเงิน',
+      donate:'บริจาค', noteText:'เปลี่ยนเป็นลิงก์ PayPal จริงของคุณก่อนเผยแพร่ — QR โค้ดสร้างขึ้นแบบเรียลไทม์จาก UPI ID ในลิงก์รูปภาพ' }
+  };
+
+  const langOverlay = document.getElementById('langOverlay');
+  const langBtn = document.getElementById('langBtn');
+  const langClose = document.getElementById('langClose');
+  const langList = document.getElementById('langList');
+
+  function buildLangList(current){
+    langList.innerHTML = '';
+    LANGS.forEach(l=>{
+      const btn = document.createElement('button');
+      btn.className = 'lang-item' + (l.code === current ? ' active' : '');
+      btn.innerHTML = `<span class="lang-flag">${l.flag}</span><span>${l.name}</span><i class="fa-solid fa-check check"></i>`;
+      btn.addEventListener('click', ()=>{
+        applyLanguage(l.code);
+        closeLangModal();
+      });
+      langList.appendChild(btn);
+    });
+  }
+
+  function applyLanguage(code){
+    const dict = I18N[code] || I18N.en;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(dict[key]) el.textContent = dict[key];
+    });
+    const langMeta = LANGS.find(l=>l.code===code) || LANGS[0];
+    document.documentElement.setAttribute('lang', code);
+    document.documentElement.setAttribute('dir', langMeta.rtl ? 'rtl' : 'ltr');
+    localStorage.setItem('rakshittips-lang', code);
+    buildLangList(code);
+  }
+
+  function openLangModal(){
+    langOverlay.classList.add('open');
+  }
+  function closeLangModal(){
+    langOverlay.classList.remove('open');
+  }
+
+  langBtn.addEventListener('click', openLangModal);
+  langClose.addEventListener('click', closeLangModal);
+  langOverlay.addEventListener('click', (e)=>{
+    if(e.target === langOverlay) closeLangModal();
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') closeLangModal();
+  });
+
+  const savedLang = localStorage.getItem('rakshittips-lang') || 'en';
+  applyLanguage(savedLang);
+</script>
+</body>
+</html>
