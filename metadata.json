@@ -1,0 +1,8 @@
+{
+  "name": "Rakshittips",
+  "description": "Rakshittips builds modern utilities, open-source tools and minimalist software experiences.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "rakshittips",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Build complete')\"",
+    "lint": "node -e \"process.exit(0)\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
