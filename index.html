@@ -1,746 +1,1954 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Rakshittips builds modern utilities, open-source tools and minimalist software experiences." />
-<meta property="og:title" content="Rakshittips" />
+<meta property="og:title" content="Rakshittips - Modern Utilities & Modding Tools" />
 <meta property="og:description" content="Rakshittips builds modern utilities, open-source tools and minimalist software experiences." />
-<title>Rakshittips</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<title>Rakshittips</title>
+<script>
+  // Immediate theme execution to prevent dark/light flash
+  (function() {
+    try {
+      const savedTheme = localStorage.getItem('rakshittips-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch(e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-scroll-behavior:smooth;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  scroll-behavior:smooth;
 }
 
 :root{
---bg:#060816;
---surface:rgba(17,23,40,.72);
---surface-2:rgba(255,255,255,.04);
---border:rgba(255,255,255,.08);
---text:#f5f7ff;
---muted:#9ba4bd;
---blue:#6ea8fe;
---purple:#9b7bff;
---pink:#ff6cab;
---green:#42d392;
---shadow:0 10px 40px rgba(0,0,0,.35);
+  --bg:#060816;
+  --surface:rgba(17,23,40,.72);
+  --surface-2:rgba(255,255,255,.04);
+  --border:rgba(255,255,255,.08);
+  --border-focus:rgba(110,168,254,.5);
+  --text:#f5f7ff;
+  --muted:#9ba4bd;
+  --blue:#6ea8fe;
+  --purple:#9b7bff;
+  --pink:#ff6cab;
+  --green:#42d392;
+  --shadow:0 10px 40px rgba(0,0,0,.35);
 }
 
 body{
-font-family:'Plus Jakarta Sans',sans-serif;
-background:var(--bg);
-color:var(--text);
-overflow-x:hidden;
-line-height:1.7;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.7;
 }
 
 .bg-orbs{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:-1;
-overflow:hidden;
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  overflow:hidden;
 }
 
 .orb{
-position:absolute;
-border-radius:999px;
-filter:blur(90px);
-opacity:.45;
+  position:absolute;
+  border-radius:999px;
+  filter:blur(90px);
+  opacity:.42;
 }
 
 .orb-1{
-width:380px;
-height:380px;
-background:#2962ff;
-top:-120px;
-left:-80px;
+  width:380px;
+  height:380px;
+  background:#2962ff;
+  top:-120px;
+  left:-80px;
 }
 
 .orb-2{
-width:320px;
-height:320px;
-background:#8b5cf6;
-right:-80px;
-top:140px;
+  width:320px;
+  height:320px;
+  background:#8b5cf6;
+  right:-80px;
+  top:140px;
 }
 
 .orb-3{
-width:260px;
-height:260px;
-background:#ff4fa3;
-bottom:-80px;
-left:40%;
+  width:280px;
+  height:280px;
+  background:#ff4fa3;
+  bottom:-80px;
+  left:40%;
 }
 
 .container{
-width:min(1180px,92%);
-margin:auto;
+  width:min(1180px,92%);
+  margin:auto;
 }
 
 nav{
-position:sticky;
-top:0;
-z-index:1000;
-backdrop-filter:blur(18px);
-background:rgba(6,8,22,.55);
-border-bottom:1px solid rgba(255,255,255,.05);
+  position:sticky;
+  top:0;
+  z-index:1000;
+  backdrop-filter:blur(18px);
+  background:rgba(6,8,22,.65);
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
 
 .nav-inner{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:18px 0;
-gap:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 0;
+  gap:20px;
 }
 
 .logo{
-display:flex;
-align-items:center;
-gap:12px;
-font-family:'Syne',sans-serif;
-font-size:1.15rem;
-font-weight:700;
-color:white;
-text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-family:'Syne',sans-serif;
+  font-size:1.15rem;
+  font-weight:700;
+  color:white;
+  text-decoration:none;
 }
 
 .logo-image{
-width:42px;
-height:42px;
-border-radius:14px;
-object-fit:cover;
-box-shadow:0 10px 30px rgba(110,168,254,.22);
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  object-fit:cover;
+  box-shadow:0 10px 30px rgba(110,168,254,.22);
 }
 
 .menu-btn{
-display:none;
-width:46px;
-height:46px;
-border-radius:14px;
-border:1px solid var(--border);
-background:rgba(255,255,255,.05);
-color:white;
-font-size:1rem;
-cursor:pointer;
-backdrop-filter:blur(14px);
+  display:none;
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  color:white;
+  font-size:1.1rem;
+  cursor:pointer;
+  backdrop-filter:blur(14px);
 }
 
 .nav-links{
-display:flex;
-gap:24px;
-flex-wrap:wrap;
+  display:flex;
+  align-items:center;
+  gap:22px;
+  flex-wrap:wrap;
 }
 
 .nav-links a{
-text-decoration:none;
-color:var(--muted);
-font-size:.96rem;
-transition:.25s ease;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:.95rem;
+  font-weight:500;
+  transition:.25s ease;
 }
 
 .nav-links a:hover{
-color:white;
+  color:white;
+}
+
+.nav-donate-pill{
+  background:linear-gradient(135deg, rgba(255,108,171,.15), rgba(155,123,255,.15)) !important;
+  border:1px solid rgba(255,108,171,.4) !important;
+  color:#ff96c7 !important;
+  border-radius:999px !important;
+  padding:7px 16px !important;
+  font-weight:600 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:7px !important;
+  transition:all .25s ease !important;
+}
+
+.nav-donate-pill:hover{
+  background:linear-gradient(135deg, #ff6cab, #9b7bff) !important;
+  color:#fff !important;
+  box-shadow:0 0 20px rgba(255,108,171,.35) !important;
+  transform:translateY(-1px) !important;
 }
 
 .hero{
-padding:120px 0 110px;
-text-align:center;
+  padding:100px 0 90px;
+  text-align:center;
 }
 
 .hero-badge{
-display:inline-flex;
-align-items:center;
-gap:10px;
-padding:12px 18px;
-border-radius:999px;
-background:rgba(255,255,255,.05);
-border:1px solid var(--border);
-backdrop-filter:blur(12px);
-margin-bottom:30px;
-color:#d7def2;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  margin-bottom:28px;
+  color:#d7def2;
+  font-size:.92rem;
 }
 
 .hero-badge i{
-color:var(--blue);
+  color:var(--blue);
 }
 
 .hero-avatar{
-margin:28px auto 0;
-width:110px;
-height:110px;
-border-radius:999px;
-padding:3px;
-background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));
-box-shadow:0 0 40px rgba(110,168,254,.35),0 0 80px rgba(155,123,255,.2);
+  margin:24px auto 0;
+  width:110px;
+  height:110px;
+  border-radius:999px;
+  padding:3px;
+  background:linear-gradient(135deg,var(--blue),var(--purple),var(--pink));
+  box-shadow:0 0 40px rgba(110,168,254,.35),0 0 80px rgba(155,123,255,.2);
 }
 
 .hero-avatar-img{
-width:100%;
-height:100%;
-border-radius:999px;
-object-fit:cover;
-border:3px solid var(--bg);
-display:block;
+  width:100%;
+  height:100%;
+  border-radius:999px;
+  object-fit:cover;
+  border:3px solid var(--bg);
+  display:block;
 }
 
 .hero h1{
-font-family:'Syne',sans-serif;
-font-size:clamp(3rem,8vw,5.8rem);
-line-height:1;
-letter-spacing:-3px;
-margin-bottom:26px;
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3rem,8vw,5.5rem);
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin:20px 0 22px;
 }
 
 .gradient{
-background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+  background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .hero p{
-max-width:760px;
-margin:auto;
-color:var(--muted);
-font-size:1.08rem;
+  max-width:760px;
+  margin:auto;
+  color:var(--muted);
+  font-size:1.08rem;
 }
 
 .hero-buttons{
-display:flex;
-justify-content:center;
-gap:16px;
-flex-wrap:wrap;
-margin-top:42px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:36px;
 }
 
 .btn{
-padding:15px 24px;
-border-radius:20px;
-text-decoration:none;
-font-weight:600;
-display:inline-flex;
-align-items:center;
-gap:10px;
-transition:.25s ease;
-}
-
-.tech-stack{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:18px;
+  padding:14px 24px;
+  border-radius:18px;
+  text-decoration:none;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  transition:.25s ease;
+  font-size:.95rem;
+  border:none;
+  cursor:pointer;
 }
 
 .btn-primary{
-background:linear-gradient(135deg,var(--blue),var(--purple));
-color:white;
-box-shadow:0 12px 30px rgba(110,168,254,.25);
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;
+  box-shadow:0 12px 30px rgba(110,168,254,.25);
+}
+
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 34px rgba(110,168,254,.35);
 }
 
 .btn-secondary{
-background:rgba(255,255,255,.05);
-border:1px solid var(--border);
-color:white;
-backdrop-filter:blur(14px);
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  color:white;
+  backdrop-filter:blur(14px);
 }
 
-.btn:hover{
-transform:translateY(-3px);
+.btn-secondary:hover{
+  background:rgba(255,255,255,.1);
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.2);
+}
+
+.btn-support{
+  background:linear-gradient(135deg,rgba(255,108,171,.2),rgba(155,123,255,.2));
+  border:1px solid rgba(255,108,171,.4);
+  color:#ff96c7;
+}
+
+.btn-support:hover{
+  background:linear-gradient(135deg,#ff6cab,#9b7bff);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,108,171,.3);
 }
 
 section{
-padding:30px 0 90px;
+  padding:40px 0 90px;
 }
 
 .section-header{
-margin-bottom:40px;
+  margin-bottom:34px;
 }
 
 .section-header h2{
-font-family:'Syne',sans-serif;
-font-size:2.3rem;
-letter-spacing:-1px;
-margin-bottom:12px;
+  font-family:'Syne',sans-serif;
+  font-size:2.3rem;
+  letter-spacing:-1px;
+  margin-bottom:10px;
 }
 
 .section-header p{
-color:var(--muted);
-max-width:700px;
+  color:var(--muted);
+  max-width:700px;
+  font-size:1rem;
 }
 
 .grid{
-display:grid;
-gap:22px;
-}
-
-.philosophy-grid{
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  display:grid;
+  gap:22px;
 }
 
 .card{
-background:var(--surface);
-border:1px solid var(--border);
-border-radius:30px;
-padding:30px;
-backdrop-filter:blur(18px);
-box-shadow:var(--shadow);
-transition:.3s ease;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:28px;
+  backdrop-filter:blur(18px);
+  box-shadow:var(--shadow);
+  transition:.3s ease;
 }
 
 .card:hover{
-transform:translateY(-6px);
-border-color:rgba(255,255,255,.13);
+  transform:translateY(-4px);
+  border-color:rgba(255,255,255,.14);
 }
 
 .icon-box{
-width:58px;
-height:58px;
-border-radius:18px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:1.2rem;
-margin-bottom:20px;
+  width:54px;
+  height:54px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.3rem;
+  margin-bottom:18px;
 }
 
-.blue{background:rgba(110,168,254,.12);color:var(--blue)}
-.purple{background:rgba(155,123,255,.12);color:var(--purple)}
-.pink{background:rgba(255,108,171,.12);color:var(--pink)}
-.green{background:rgba(66,211,146,.12);color:var(--green)}
-
-.card h3{
-margin-bottom:12px;
-font-size:1.08rem;
-}
-
-.card p{
-color:var(--muted);
-font-size:.96rem;
-}
+.blue{background:rgba(110,168,254,.14);color:var(--blue)}
+.purple{background:rgba(155,123,255,.14);color:var(--purple)}
+.pink{background:rgba(255,108,171,.14);color:var(--pink)}
+.green{background:rgba(66,211,146,.14);color:var(--green)}
 
 .projects{
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
 }
 
 .project-card{
-position:relative;
-overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:relative;
+}
+
+.badge-tag{
+  position:absolute;
+  top:24px;
+  right:24px;
+  font-size:.78rem;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:999px;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+}
+
+.badge-tag.pink{background:rgba(255,108,171,.15);color:var(--pink);border:1px solid rgba(255,108,171,.3)}
+.badge-tag.blue{background:rgba(110,168,254,.15);color:var(--blue);border:1px solid rgba(110,168,254,.3)}
+.badge-tag.green{background:rgba(66,211,146,.15);color:var(--green);border:1px solid rgba(66,211,146,.3)}
+
+.project-card h3{
+  font-size:1.3rem;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.project-card p{
+  color:var(--muted);
+  font-size:.95rem;
+  line-height:1.6;
+  margin-bottom:20px;
+}
+
+.project-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:auto;
+}
+
+.btn-modal-trigger{
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:14px;
+  font-size:.88rem;
+  font-weight:600;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  transition:.2s ease;
+}
+
+.btn-modal-trigger:hover{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.25);
 }
 
 .project-link{
-display:inline-flex;
-align-items:center;
-gap:10px;
-margin-top:24px;
-color:white;
-text-decoration:none;
-font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:600;
+  font-size:.9rem;
+  padding:10px 14px;
+  border-radius:14px;
+  background:rgba(110,168,254,.08);
+  transition:.2s ease;
 }
 
+.project-link:hover{
+  background:rgba(110,168,254,.18);
+  color:#fff;
+}
+
+/* Interactive Cards */
+.card, .tech-detail-card, .support-banner{
+  position:relative;
+  transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(110,168,254,.35);
+  box-shadow:0 18px 45px rgba(0,0,0,.45);
+}
+
+/* Tech Stack Explorer */
 .tech-stack{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:18px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:16px;
 }
 
 .tech-item{
-width:78px;
-height:78px;
-border-radius:24px;
-background:var(--surface-2);
-border:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:1.9rem;
-backdrop-filter:blur(16px);
-transition:.25s ease;
+  width:76px;
+  height:76px;
+  border-radius:22px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:1.85rem;
+  backdrop-filter:blur(16px);
+  transition:.25s ease;
+  cursor:pointer;
+  position:relative;
 }
 
-.tech-item:hover{
-transform:translateY(-5px);
-background:rgba(255,255,255,.08);
+.tech-item span{
+  font-size:.65rem;
+  font-weight:700;
+  margin-top:4px;
+  color:var(--muted);
 }
 
-.skills-pills{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
+.tech-item:hover, .tech-item.active{
+  transform:translateY(-5px);
+  background:rgba(110,168,254,.14);
+  border-color:var(--blue);
+  color:var(--blue);
+  box-shadow:0 10px 25px rgba(110,168,254,.25);
 }
 
-.skill-pill{
-padding:8px 16px;
-border-radius:10px;
-background:transparent;
-color:#fff;
-font-size:.88rem;
-font-weight:400;
-border:1.5px solid rgba(255,255,255,0.55);
-transition:.25s ease;
-cursor:default;
+.tech-item.active span, .tech-item:hover span{
+  color:#fff;
 }
 
-.skill-pill:hover{
-transform:translateY(-3px);
-background:white;
-box-shadow:0 6px 20px rgba(255,255,255,.15);
+.tech-detail-card{
+  display:none;
+  background:rgba(15,22,40,.8);
+  border:1px solid rgba(110,168,254,.3);
+  border-radius:20px;
+  padding:20px 24px;
+  margin-top:24px;
+  backdrop-filter:blur(20px);
+  animation:toolFade .25s ease;
 }
 
-.tech-pill{
-padding:10px 18px;
-border-radius:999px;
-background:var(--surface-2);
-border:1px solid var(--border);
-color:var(--text);
-font-size:.93rem;
-font-weight:500;
-backdrop-filter:blur(16px);
-transition:.25s ease;
-}
-
-.tech-pill:hover,
-.tech-pill:active{
-transform:translateY(-4px);
-background:rgba(110,168,254,.12);
-border-color:rgba(110,168,254,.5);
-color:var(--blue);
-box-shadow:0 0 18px rgba(110,168,254,.25);
-}
-
-.tech-item{
-width:78px;
-height:78px;
-border-radius:24px;
-background:var(--surface-2);
-border:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:1.9rem;
-backdrop-filter:blur(16px);
-transition:.25s ease;
-}
-
-.tech-item:hover{
-transform:translateY(-5px);
-background:rgba(255,255,255,.08);
+.tech-detail-card.open{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  flex-wrap:wrap;
 }
 
 .goals{
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 }
 
 .goal-box{
-display:flex;
-gap:18px;
-align-items:flex-start;
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
 }
 
 .goal-box .icon-box{
-flex-shrink:0;
-margin-bottom:0;
-width:50px;
-height:50px;
-border-radius:16px;
+  flex-shrink:0;
+  margin-bottom:0;
+  width:48px;
+  height:48px;
+  border-radius:14px;
+}
+
+.goal-box h3{
+  margin-bottom:6px;
+  font-size:1.05rem;
+}
+
+.goal-box p{
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.55;
+}
+
+/* Support Banner */
+.support-banner{
+  background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(236,72,153,.18) 55%,rgba(249,115,22,.12));
+  border:1px solid rgba(236,72,153,.35);
+  border-radius:30px;
+  padding:36px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:26px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+
+.support-banner h3{
+  font-family:'Syne',sans-serif;
+  font-size:1.8rem;
+  margin-bottom:8px;
+}
+
+.support-banner p{
+  color:#d5cde2;
+  max-width:620px;
+  font-size:.96rem;
+}
+
+.support-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
 .footer{
-padding:60px 0 40px;
-text-align:center;
+  padding:60px 0 40px;
+  text-align:center;
+  border-top:1px solid rgba(255,255,255,.05);
+  margin-top:40px;
 }
 
 .footer-links{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:16px;
-margin-bottom:24px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:24px;
 }
 
 .footer-links a{
-padding:14px 22px;
-border-radius:18px;
-background:rgba(255,255,255,.05);
-border:1px solid var(--border);
-text-decoration:none;
-color:white;
-display:flex;
-align-items:center;
-gap:10px;
+  padding:12px 20px;
+  border-radius:16px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--border);
+  text-decoration:none;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:.92rem;
+  transition:.2s ease;
+}
+
+.footer-links a:hover{
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.2);
+  transform:translateY(-2px);
 }
 
 .footer p{
-color:var(--muted);
+  color:var(--muted);
+  font-size:.9rem;
 }
 
-@media(max-width:900px){
-.hero{
-padding:95px 0 75px;
+/* MODAL */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(4,6,18,.82);
+  backdrop-filter:blur(14px);
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-.hero h1{
-font-size:clamp(2.5rem,10vw,4.2rem);
+.modal-overlay.open{
+  display:flex;
 }
 
-.projects,
-.philosophy-grid,
-.goals{
-grid-template-columns:1fr 1fr;
+.modal-dialog{
+  background:#0d1226;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:28px;
+  max-width:600px;
+  width:100%;
+  max-height:88vh;
+  overflow-y:auto;
+  padding:32px;
+  box-shadow:0 24px 60px rgba(0,0,0,.7);
+  position:relative;
+  animation:modalIn .25s cubic-bezier(.16,1,.3,1);
 }
+
+@keyframes modalIn{
+  from{transform:scale(.94);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.modal-close{
+  position:absolute;
+  top:22px;
+  right:22px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  color:#fff;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .2s;
+}
+
+.modal-close:hover{
+  background:rgba(255,255,255,.15);
+  transform:rotate(90deg);
+}
+
+.modal-feature-list{
+  list-style:none;
+  margin:18px 0 24px;
+}
+
+.modal-feature-list li{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:.93rem;
+  color:#e0e5f5;
+}
+
+.modal-feature-list li i{
+  color:var(--blue);
+  width:18px;
+  text-align:center;
+}
+
+/* Toast */
+.toast-notice{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  background:rgba(14,20,38,.96);
+  border:1px solid var(--blue);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:14px;
+  font-size:.9rem;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 12px 35px rgba(0,0,0,.5);
+  transform:translateY(80px);
+  opacity:0;
+  transition:all .25s ease;
+  z-index:99999;
+  backdrop-filter:blur(10px);
+  pointer-events:none;
+}
+
+.toast-notice.show{
+  transform:translateY(0);
+  opacity:1;
+}
+
+/* THEME TOGGLE CONTROLS */
+.nav-actions-group{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.theme-toggle-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:7px 14px;
+  color:#f5f7ff;
+  font-family:inherit;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  backdrop-filter:blur(14px);
+  transition:all .25s cubic-bezier(.16,1,.3,1);
+  user-select:none;
+}
+
+.theme-toggle-btn:hover{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.25);
+  transform:translateY(-1px);
+}
+
+.theme-toggle-btn:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+}
+
+.theme-icon-container{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:20px;
+  height:20px;
+  position:relative;
+}
+
+.theme-icon-container i{
+  position:absolute;
+  font-size:.95rem;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+}
+
+.theme-icon-container .icon-moon{
+  opacity:1;
+  transform:rotate(0deg) scale(1);
+  color:#b794f6;
+}
+
+.theme-icon-container .icon-sun{
+  opacity:0;
+  transform:rotate(90deg) scale(0.5);
+  color:#f59e0b;
+}
+
+.theme-mode-text{
+  font-size:.82rem;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+
+/* Mobile Nav Theme Switch Row */
+.mobile-theme-item{
+  display:none;
+  width:100%;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  align-items:center;
+  justify-content:space-between;
+}
+
+.mobile-theme-label{
+  font-size:.88rem;
+  font-weight:600;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.mobile-theme-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--border);
+  padding:6px 14px;
+  border-radius:999px;
+  color:var(--text);
+  font-family:inherit;
+  font-size:.84rem;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.mobile-switch-track{
+  width:36px;
+  height:20px;
+  background:rgba(255,255,255,.16);
+  border-radius:999px;
+  position:relative;
+  transition:background .25s;
+}
+
+.mobile-switch-thumb{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#fff;
+  position:absolute;
+  top:3px;
+  left:3px;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .25s;
+}
+
+/* ==============================================================
+   HIGH-CONTRAST LIGHT MODE
+   ============================================================== */
+[data-theme="light"]{
+  --bg:#f8fafc;
+  --surface:#ffffff;
+  --surface-2:#f1f5f9;
+  --border:rgba(15,23,42,.16);
+  --border-focus:#0052cc;
+  --text:#090d16;
+  --muted:#334155;
+  --blue:#0052cc;
+  --purple:#6d28d9;
+  --pink:#be185d;
+  --green:#047857;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+}
+
+[data-theme="light"] body{
+  background:var(--bg);
+  color:var(--text);
+}
+
+[data-theme="light"] .bg-orbs .orb{
+  opacity:.12;
+  filter:blur(110px);
+}
+
+[data-theme="light"] nav{
+  background:rgba(255,255,255,.92);
+  border-bottom:1.5px solid rgba(15,23,42,.12);
+  box-shadow:0 4px 20px rgba(0,0,0,.04);
+}
+
+[data-theme="light"] .logo{
+  color:#090d16;
+}
+
+[data-theme="light"] .nav-links a{
+  color:#334155;
+  font-weight:600;
+}
+
+[data-theme="light"] .nav-links a:hover{
+  color:#0052cc;
+}
+
+[data-theme="light"] .nav-donate-pill{
+  background:linear-gradient(135deg, rgba(190,24,93,.1), rgba(109,40,217,.1)) !important;
+  border-color:rgba(190,24,93,.4) !important;
+  color:#be185d !important;
+}
+
+[data-theme="light"] .nav-donate-pill:hover{
+  background:linear-gradient(135deg, #be185d, #6d28d9) !important;
+  color:#fff !important;
+  box-shadow:0 4px 18px rgba(190,24,93,.3) !important;
+}
+
+[data-theme="light"] .theme-toggle-btn{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.22);
+  color:#090d16;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+[data-theme="light"] .theme-toggle-btn:hover{
+  background:#f1f5f9;
+  border-color:#0052cc;
+  color:#0052cc;
+  box-shadow:0 4px 14px rgba(0,82,204,.16);
+}
+
+[data-theme="light"] .theme-icon-container .icon-moon{
+  opacity:0;
+  transform:rotate(-90deg) scale(0.5);
+}
+
+[data-theme="light"] .theme-icon-container .icon-sun{
+  opacity:1;
+  transform:rotate(0deg) scale(1);
+  color:#d97706;
+}
+
+[data-theme="light"] .mobile-switch-track{
+  background:#0052cc;
+}
+
+[data-theme="light"] .mobile-switch-thumb{
+  transform:translateX(16px);
+  background:#fff;
+}
+
+[data-theme="light"] .mobile-theme-btn{
+  background:#f1f5f9;
+  border-color:rgba(15,23,42,.2);
+  color:#090d16;
+}
+
+[data-theme="light"] .menu-btn{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.2);
+  color:#090d16;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+[data-theme="light"] .hero-badge{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.18);
+  color:#090d16;
+  font-weight:600;
+  box-shadow:0 4px 14px rgba(0,0,0,.05);
+}
+
+[data-theme="light"] .hero-badge i{
+  color:#0052cc;
+}
+
+[data-theme="light"] .hero-avatar-img{
+  border-color:#f8fafc;
+}
+
+[data-theme="light"] .gradient{
+  background:linear-gradient(90deg, #0052cc, #6d28d9, #be185d);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+[data-theme="light"] .hero p{
+  color:#334155;
+  font-weight:500;
+}
+
+[data-theme="light"] .btn-primary{
+  background:linear-gradient(135deg, #0052cc, #6d28d9);
+  color:#fff;
+  box-shadow:0 8px 24px rgba(0,82,204,.28);
+}
+
+[data-theme="light"] .btn-primary:hover{
+  box-shadow:0 12px 30px rgba(0,82,204,.38);
+}
+
+[data-theme="light"] .btn-secondary{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.22);
+  color:#090d16;
+  box-shadow:0 3px 10px rgba(0,0,0,.05);
+}
+
+[data-theme="light"] .btn-secondary:hover{
+  background:#f1f5f9;
+  border-color:#0052cc;
+  color:#0052cc;
+}
+
+[data-theme="light"] .btn-support{
+  background:linear-gradient(135deg, rgba(190,24,93,.12), rgba(109,40,217,.12));
+  border-color:rgba(190,24,93,.45);
+  color:#be185d;
+  font-weight:700;
+}
+
+[data-theme="light"] .btn-support:hover{
+  background:linear-gradient(135deg, #be185d, #6d28d9);
+  color:#fff;
+}
+
+[data-theme="light"] .section-header h2{
+  color:#090d16;
+}
+
+[data-theme="light"] .section-header p{
+  color:#334155;
+}
+
+[data-theme="light"] .card{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.15);
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+}
+
+[data-theme="light"] .card:hover{
+  border-color:rgba(0,82,204,.4);
+  box-shadow:0 14px 36px rgba(15,23,42,.12);
+}
+
+[data-theme="light"] .project-card h3{
+  color:#090d16;
+}
+
+[data-theme="light"] .project-card p{
+  color:#334155;
+}
+
+[data-theme="light"] .badge-tag.pink{
+  background:rgba(190,24,93,.12);
+  color:#be185d;
+  border-color:rgba(190,24,93,.4);
+}
+
+[data-theme="light"] .badge-tag.blue{
+  background:rgba(0,82,204,.12);
+  color:#0052cc;
+  border-color:rgba(0,82,204,.4);
+}
+
+[data-theme="light"] .badge-tag.green{
+  background:rgba(4,120,87,.12);
+  color:#047857;
+  border-color:rgba(4,120,87,.4);
+}
+
+[data-theme="light"] .btn-modal-trigger{
+  background:#f1f5f9;
+  border:1.5px solid rgba(15,23,42,.18);
+  color:#090d16;
+}
+
+[data-theme="light"] .btn-modal-trigger:hover{
+  background:#e2e8f0;
+  border-color:rgba(15,23,42,.3);
+}
+
+[data-theme="light"] .project-link{
+  background:rgba(0,82,204,.08);
+  border:1.5px solid rgba(0,82,204,.25);
+  color:#0052cc;
+}
+
+[data-theme="light"] .project-link:hover{
+  background:#0052cc;
+  color:#fff;
+}
+
+[data-theme="light"] .tech-item{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.16);
+  color:#090d16;
+  box-shadow:0 4px 12px rgba(0,0,0,.04);
+}
+
+[data-theme="light"] .tech-item span{
+  color:#334155;
+}
+
+[data-theme="light"] .tech-item:hover,
+[data-theme="light"] .tech-item.active{
+  background:#eff6ff;
+  border-color:#0052cc;
+  color:#0052cc;
+  box-shadow:0 8px 24px rgba(0,82,204,.2);
+}
+
+[data-theme="light"] .tech-item:hover span,
+[data-theme="light"] .tech-item.active span{
+  color:#0052cc;
+  font-weight:800;
+}
+
+[data-theme="light"] .tech-detail-card{
+  background:#ffffff;
+  border:1.5px solid rgba(0,82,204,.25);
+  box-shadow:0 12px 36px rgba(15,23,42,.09);
+}
+
+[data-theme="light"] .tech-detail-card h3{
+  color:#090d16;
+}
+
+[data-theme="light"] .tech-detail-card p{
+  color:#334155;
+}
+
+[data-theme="light"] .goal-box h3{
+  color:#090d16;
+}
+
+[data-theme="light"] .goal-box p{
+  color:#334155;
+}
+
+[data-theme="light"] .support-banner{
+  background:linear-gradient(135deg, rgba(109,40,217,.08), rgba(190,24,93,.08) 55%, rgba(249,115,22,.08));
+  border:1.5px solid rgba(190,24,93,.35);
+  box-shadow:0 12px 36px rgba(0,0,0,.05);
+}
+
+[data-theme="light"] .support-banner h3{
+  color:#090d16;
+}
+
+[data-theme="light"] .support-banner p{
+  color:#334155;
+}
+
+[data-theme="light"] .footer{
+  border-top:1.5px solid rgba(15,23,42,.12);
+}
+
+[data-theme="light"] .footer-links a{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.16);
+  color:#090d16;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+[data-theme="light"] .footer-links a:hover{
+  background:#f1f5f9;
+  border-color:#0052cc;
+  color:#0052cc;
+}
+
+[data-theme="light"] .footer p{
+  color:#475569;
+}
+
+[data-theme="light"] .modal-overlay{
+  background:rgba(15,23,42,.65);
+}
+
+[data-theme="light"] .modal-dialog{
+  background:#ffffff;
+  border:1.5px solid rgba(15,23,42,.2);
+  color:#090d16;
+  box-shadow:0 25px 60px rgba(0,0,0,.25);
+}
+
+[data-theme="light"] .modal-dialog h3,
+[data-theme="light"] .modal-dialog h4{
+  color:#090d16 !important;
+}
+
+[data-theme="light"] .modal-close{
+  background:#f1f5f9;
+  border:1.5px solid rgba(15,23,42,.16);
+  color:#090d16;
+}
+
+[data-theme="light"] .modal-feature-list li{
+  color:#1e293b;
+  border-bottom:1px solid rgba(15,23,42,.12);
+}
+
+[data-theme="light"] .toast-notice{
+  background:#ffffff;
+  border:1.5px solid #0052cc;
+  color:#090d16;
+  box-shadow:0 12px 35px rgba(0,0,0,.15);
 }
 
 @media(max-width:768px){
-.hero{
-padding:100px 0 80px;
+  .hero{padding:70px 0 60px}
+  .nav-inner{padding:14px 0}
+  .menu-btn{display:flex;align-items:center;justify-content:center}
+  .mobile-theme-item{display:flex}
+  .nav-links{
+    position:absolute;
+    top:74px;
+    left:4%;
+    right:4%;
+    background:rgba(10,14,28,.96);
+    border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(22px);
+    padding:20px;
+    border-radius:24px;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:16px;
+    display:none;
+    box-shadow:0 15px 40px rgba(0,0,0,.45);
+  }
+  .nav-links.active{display:flex}
+  .support-banner{padding:24px}
+  .hero-buttons{flex-direction:column;align-items:center}
+  .hero-buttons .btn{width:100%;max-width:320px;justify-content:center}
+
+  [data-theme="light"] .nav-links{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,.18);
+    box-shadow:0 15px 40px rgba(0,0,0,.14);
+  }
 }
 
-.hero h1{
-letter-spacing:-1px;
+/* Scroll Reading Progress Bar */
+.scroll-progress-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:3.5px;
+  background:transparent;
+  z-index:9999;
+  pointer-events:none;
+}
+.scroll-progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, #6ea8fe, #9b7bff, #ff6cab);
+  box-shadow:0 0 10px rgba(110,168,254,.7);
+  transition:width .1s cubic-bezier(.16,1,.3,1);
 }
 
-.nav-inner{
-padding:16px 0;
+/* Scroll Reveal Elements */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+  will-change:opacity, transform;
+}
+.reveal.revealed{
+  opacity:1;
+  transform:translateY(0);
 }
 
-.menu-btn{
-display:flex;
-align-items:center;
-justify-content:center;
+/* Active Nav Link Highlight */
+.nav-links a.nav-active{
+  color:var(--blue) !important;
+  font-weight:800;
+  position:relative;
 }
-
-.nav-links{
-position:absolute;
-top:82px;
-left:4%;
-right:4%;
-background:rgba(10,14,28,.92);
-border:1px solid rgba(255,255,255,.08);
-backdrop-filter:blur(20px);
-padding:18px;
-border-radius:24px;
-flex-direction:column;
-align-items:flex-start;
-gap:18px;
-display:none;
-box-shadow:0 15px 40px rgba(0,0,0,.35);
+.nav-links a.nav-active::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;
+  left:0;
+  right:0;
+  height:2px;
+  background:linear-gradient(90deg, var(--blue), var(--pink));
+  border-radius:2px;
 }
-
-.nav-links.active{
-display:flex;
-}
-
-.projects,
-.philosophy-grid,
-.goals{
-grid-template-columns:1fr;
-}
-
-.hero-buttons{
-flex-direction:column;
-align-items:center;
-}
-
-.hero-buttons .btn{
-width:100%;
-max-width:320px;
-justify-content:center;
-}
-
-.section-header h2{
-font-size:1.9rem;
-}
-
-.card{
-padding:24px;
-border-radius:26px;
-}
-}
-</style></head>
-<body><div class="bg-orbs">
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
-</div><nav>
-<div class="container nav-inner">
-<a href="#" class="logo">
-<img src="https://raw.githubusercontent.com/Rakshittips/Rakshittips/refs/heads/main/assets/foreground.png" alt="Rakshittips Logo" class="logo-image">
-Owner Rakshittips!
-</a><button class="menu-btn" id="menuBtn">
-<i class="fa-solid fa-bars"></i>
-</button><div class="nav-links" id="mobileMenu">
-<a href="#about">About</a>
-<a href="#projects">Projects</a>
-<a href="#stack">Stack</a>
-<a href="#goals">Goals</a>
-</div>
-</div>
-</nav><section class="hero">
-<div class="container"><div class="hero-badge">
-<i class="fa-solid fa-sparkles"></i>
-Android Modding • Web Development • Open-Source Projects!
-<i class="fa-solid fa-code"></i>
-</div><div class="hero-avatar">
-<img src="https://i.ibb.co/CpMg4bgX/Me.png" alt="Founder" class="hero-avatar-img">
-</div><h1>
-<span class="gradient">Rakshittips</span>
-</h1><p>
-Rakshittips is a tech creator and developer focused on Android customization, modding, Telegram projects, web development, and open-source tools. Passionate about creating simple, useful, and modern digital experiences with performance and creativity at the core.
-</p><div class="hero-buttons">
-<a href="https://github.com/Rakshittips" class="btn btn-primary">
-<i class="fa-brands fa-github"></i>
-GitHub!
-</a><a href="https://t.me/Mr_Rakshit_2_0/" class="btn btn-secondary">
-<i class="fab fa-telegram"></i>
-Telegram!
-</a>
-</div></div>
-</section><section id="stack">
-<div class="container"><div class="section-header">
-<h2>🛠 Tech Stack</h2>
-<p>
-Technologies used across Rakshittips projects and experiments.
-</p>
-</div><div class="tech-stack">
-<div class="tech-item"><i class="fa-brands fa-html5"></i></div>
-<div class="tech-item"><i class="fa-brands fa-css3-alt"></i></div>
-<div class="tech-item"><i class="fa-brands fa-js"></i></div>
-<div class="tech-item"><i class="fa-brands fa-python"></i></div>
-<div class="tech-item"><i class="fa-brands fa-node-js"></i></div>
-<div class="tech-item"><i class="fa-brands fa-github"></i></div>
-<div class="tech-item"><i class="fa-solid fa-laptop-code"></i></div>
-</div></div>
-</section><section id="projects">
-<div class="container"><div class="section-header">
-<h2>Featured Projects!</h2>
-<p>
-Powerful Instagram mods focused on customization, privacy features, enhanced downloads, iOS-style experience, and a cleaner user interface for everyday use!
-</p>
-</div><div class="grid projects"><div class="card project-card">
-<div class="icon-box pink">
-<i class="fa-brands fa-instagram"></i>
-</div>
-<h3>instaGram Pro</h3>
-<p>
-Refined Instagram-based experience with built-in iOS emojis, cleaner UI and ad-free usage.
-</p>
-<a href="https://insta-gram-pro.vercel.app/" class="project-link">
-View Project
-<i class="fa-solid fa-arrow-right"></i>
-</a>
-
-</div>
-<div class="card project-card">
-<div class="icon-box blue">
-<i class="fa-brands fa-telegram"></i>
-</div>
-<h3>MRGram iPhone!</h3>
-<p>
-Experience Telegram with a sleek iPhone-inspired design, smooth animations, beautiful fonts, custom emojis, and a refined user interface — all while keeping the power and speed of Telegram on Android.
-</p>
-<a href="https://mrgram-inky.vercel.app/" class="project-link">
-Try Now
-<i class="fa-solid fa-arrow-right"></i>
-</a>
+</style>
+</head>
+<body>
+<div class="scroll-progress-container"><div class="scroll-progress-bar" id="scrollProgressBar"></div></div>
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 </div>
 
+<nav>
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <img src="https://raw.githubusercontent.com/Rakshittips/Rakshittips/refs/heads/main/assets/foreground.png" alt="Rakshittips Logo" class="logo-image" onerror="this.src='/assets/foreground.png'">
+      Owner Rakshittips!
+    </a>
+    <div class="nav-actions-group">
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Switch to High-Contrast Light Mode" title="Switch Theme (Dark / High-Contrast Light)">
+        <span class="theme-icon-container" aria-hidden="true">
+          <i class="fa-solid fa-moon icon-moon"></i>
+          <i class="fa-solid fa-sun icon-sun"></i>
+        </span>
+        <span class="theme-mode-text" id="themeModeText">Dark</span>
+      </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <div class="nav-links" id="mobileMenu">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#stack">Tech Stack</a>
+      <a href="#goals">Goals</a>
+      <a href="/DonateSupport.html" class="nav-donate-pill"><i class="fa-solid fa-heart"></i> Support Dev</a>
+      <div class="mobile-theme-item">
+        <span class="mobile-theme-label"><i class="fa-solid fa-circle-half-stroke"></i> Appearance</span>
+        <button class="mobile-theme-btn" id="mobileThemeToggleBtn" type="button" aria-label="Switch appearance theme">
+          <span id="mobileThemeStatusText">Dark Mode</span>
+          <span class="mobile-switch-track"><span class="mobile-switch-thumb"></span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" id="about">
+  <div class="container">
+    <div class="hero-badge">
+      <i class="fa-solid fa-sparkles"></i>
+      Android Modding • Web Development • Open-Source Utilities!
+      <i class="fa-solid fa-code"></i>
+    </div>
+    <div class="hero-avatar">
+      <img src="https://i.ibb.co/CpMg4bgX/Me.png" alt="Founder" class="hero-avatar-img">
+    </div>
+    <h1>
+      <span class="gradient">Rakshittips</span>
+    </h1>
+    <p>
+      Rakshittips is a tech creator and developer focused on Android customization, modding, Telegram projects, web development, and open-source tools. Passionate about creating simple, useful, and modern digital experiences with performance and creativity at the core.
+    </p>
+    <div class="hero-buttons">
+      <a href="#projects" class="btn btn-primary">
+        <i class="fa-solid fa-layer-group"></i>
+        View Projects
+      </a>
+      <a href="https://t.me/Mr_Rakshit_2_0/" target="_blank" rel="noopener" class="btn btn-secondary">
+        <i class="fa-brands fa-telegram"></i>
+        Telegram Channel!
+      </a>
+      <a href="/DonateSupport.html" class="btn btn-support">
+        <i class="fa-solid fa-heart"></i>
+        Support / Donate
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS SECTION -->
+<section id="projects" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured Projects!</h2>
+      <p>
+        Powerful mods focused on customization, privacy features, enhanced downloads, iOS-style experience, and a cleaner user interface for everyday use!
+      </p>
+    </div>
+    <div class="grid projects">
+      <div class="card project-card">
+        <span class="badge-tag pink">v31.2 • Active</span>
+        <div class="icon-box pink">
+          <i class="fa-brands fa-instagram"></i>
+        </div>
+        <h3>instaGram Pro</h3>
+        <p>
+          Refined Instagram-based experience with built-in iOS emojis, cleaner UI, ad-free feed, ghost mode, and high-resolution media downloads.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('instagram')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://insta-gram-pro.vercel.app/" target="_blank" rel="noopener" class="project-link">
+            Live Web <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag blue">v10.8 • iOS UI</span>
+        <div class="icon-box blue">
+          <i class="fa-brands fa-telegram"></i>
+        </div>
+        <h3>MRGram iPhone!</h3>
+        <p>
+          Experience Telegram with a sleek iPhone-inspired design, smooth animations, Apple SF Pro font, custom emojis, and a refined glass interface on Android.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('mrgram')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://mrgram-inky.vercel.app/" target="_blank" rel="noopener" class="project-link">
+            Try Now <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag green">Open Source</span>
+        <div class="icon-box green">
+          <i class="fa-brands fa-github"></i>
+        </div>
+        <h3>Open Source & Utilities</h3>
+        <p>
+          Custom scripts, mod patches, reverse engineering workflows, and utilities crafted for Android and Telegram mod enthusiasts.
+        </p>
+        <div class="project-actions">
+          <a href="https://github.com/Rakshittips" target="_blank" rel="noopener" class="project-link" style="width:100%;text-align:center;">
+            View on GitHub <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK SECTION -->
+<section id="stack" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>🛠 Tech Stack & Toolkit</h2>
+      <p>
+        Technologies, decompilers, and tools used across Rakshittips projects, APK modifications, and web utilities. Tap any item to inspect its usage.
+      </p>
+    </div>
+    
+    <div class="tech-stack">
+      <div class="tech-item active" onclick="inspectTech('html5', this)">
+        <i class="fa-brands fa-html5"></i>
+        <span>HTML5</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('css3', this)">
+        <i class="fa-brands fa-css3-alt"></i>
+        <span>CSS3</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('js', this)">
+        <i class="fa-brands fa-js"></i>
+        <span>JavaScript</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('python', this)">
+        <i class="fa-brands fa-python"></i>
+        <span>Python</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('nodejs', this)">
+        <i class="fa-brands fa-node-js"></i>
+        <span>Node.js</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('android', this)">
+        <i class="fa-brands fa-android"></i>
+        <span>Android</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('github', this)">
+        <i class="fa-brands fa-github"></i>
+        <span>Git/Hub</span>
+      </div>
+      <div class="tech-item" onclick="inspectTech('tools', this)">
+        <i class="fa-solid fa-laptop-code"></i>
+        <span>Smali/Dex</span>
+      </div>
+    </div>
+
+    <!-- Active Tech Drawer -->
+    <div class="tech-detail-card open" id="techDetailBox">
+      <div>
+        <h3 id="techTitle" style="font-size:1.15rem;margin-bottom:4px;color:var(--blue)">HTML5</h3>
+        <p id="techDesc" style="color:var(--muted);font-size:.92rem;max-width:700px">
+          Semantic, high-performance web structure used for lightning-fast mod documentation, web portals, and lightweight tools.
+        </p>
+      </div>
+      <span class="badge-tag blue" id="techRole">Core Frontend</span>
+    </div>
+  </div>
+</section>
+
+<!-- GOALS SECTION -->
+<section id="goals" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>Rakshittips Goals & Principles</h2>
+      <p>
+        Building clean software with user freedom, speed, and privacy at the forefront.
+      </p>
+    </div>
+
+    <div class="grid goals">
+      <div class="card goal-box">
+        <div class="icon-box blue"><i class="fa-solid fa-gauge-high"></i></div>
+        <div>
+          <h3>Performance</h3>
+          <p>Provide smooth, fast, and lightweight modded applications without battery drain.</p>
+        </div>
+      </div>
+      <div class="card goal-box">
+        <div class="icon-box pink"><i class="fa-solid fa-palette"></i></div>
+        <div>
+          <h3>Modern UI</h3>
+          <p>Deliver refined iOS-style aesthetics, smooth blur effects, and intuitive interfaces.</p>
+        </div>
+      </div>
+      <div class="card goal-box">
+        <div class="icon-box green"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <h3>Privacy First</h3>
+          <p>Offer ghost modes, hide view receipts, block trackers, and prevent telemetry.</p>
+        </div>
+      </div>
+      <div class="card goal-box">
+        <div class="icon-box purple"><i class="fa-solid fa-layer-group"></i></div>
+        <div>
+          <h3>Innovation</h3>
+          <p>Continuously introduce new features, iOS emojis, and modern tools for creators.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT / DONATE BANNER -->
+    <div class="support-banner reveal">
+      <div>
+        <h3>Support Independent Creator & Developer 💖</h3>
+        <p>
+          Every build, patch, and utility here is crafted solo without any advertising team. If my mods or tools saved you time, consider fueling the next release!
+        </p>
+      </div>
+      <div class="support-actions">
+        <button class="btn btn-secondary" onclick="copyUPI()">
+          <i class="fa-solid fa-receipt"></i> Copy UPI ID
+        </button>
+        <a href="/DonateSupport.html" class="btn btn-primary">
+          <i class="fa-solid fa-heart"></i> Open Support Hub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://github.com/Rakshittips" target="_blank" rel="noopener">
+        <i class="fa-brands fa-github"></i> GitHub
+      </a>
+      <a href="https://www.instagram.com/mr._rakshit_2.0" target="_blank" rel="noopener">
+        <i class="fa-brands fa-instagram"></i> Instagram
+      </a>
+      <a href="https://youtube.com/@mr._rakshit_2.0" target="_blank" rel="noopener">
+        <i class="fa-brands fa-youtube"></i> YouTube
+      </a>
+      <a href="https://t.me/Mr_Rakshit_2_0" target="_blank" rel="noopener">
+        <i class="fa-brands fa-telegram"></i> Telegram
+      </a>
+      <a href="/DonateSupport.html">
+        <i class="fa-solid fa-heart"></i> Donate Hub
+      </a>
+    </div>
+    <p>© 2026 Rakshittips. All rights reserved. Crafted with precision.</p>
+  </div>
+</footer>
+
+<!-- PROJECT DETAILS MODAL -->
+<div class="modal-overlay" id="projectModal" onclick="if(event.target===this) closeProjectModal()">
+  <div class="modal-dialog">
+    <button class="modal-close" onclick="closeProjectModal()" aria-label="Close modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div id="modalContent">
+      <!-- Dynamic content -->
+    </div>
+  </div>
 </div>
+
+<!-- FLOATING TOAST NOTIFICATION -->
+<div class="toast-notice" id="toastNotice">
+  <i class="fa-solid fa-circle-check" style="color:var(--green)"></i>
+  <span id="toastText">Copied to clipboard!</span>
 </div>
-<div class="container"><div class="section-header">
-</section><section id="goals">
-<div class="container"><div class="section-header">
-<h2>Rakshittips Goals</h2>
-<p>
-Feature-rich Instagram mod with iOS emojis, privacy tools, downloads, customization, and a smoother user experience!
-</p>
-</div><div class="grid goals"><div class="card goal-box">
-<div class="icon-box blue">
-<i class="fa-solid fa-gauge-high"></i>
-</div>
-<div>
-<h3>Performance</h3>
-<p>
-Provide smooth, fast, and lightweight modded applications.
-</p>
-</div>
-</div><div class="card goal-box">
-<div class="icon-box pink">
-<i class="fa-solid fa-palette"></i>
-</div>
-<div>
-<h3>Modern UI</h3>
-<p>
-Create clean, attractive, and user-friendly interfaces.
-</p>
-</div>
-</div><div class="card goal-box">
-<div class="icon-box green">
-<i class="fa-solid fa-code-branch"></i>
-</div>
-<div>
-<h3>Privacy Features</h3>
-<p>
-Offer enhanced privacy controls and customization options.
-</p>
-</div>
-</div><div class="card goal-box">
-<div class="icon-box purple">
-<i class="fa-solid fa-layer-group"></i>
-</div>
-<div>
-<h3>Innovation</h3>
-<p>
-Continuously introduce new features and improvements.
-</p>
-</div>
-</div><div class="card goal-box">
-<div class="icon-box purple">
-<i class="fa-solid fa-layer-group"></i>
-</div>
-<div>
-<h3>Community</h3>
-<p>
-Support users with updates, feedback, and helpful content.
-</p>
-</div>
-</div></div>
-</div>
-</section><footer class="footer">
-<div class="container"><div class="footer-links">
-<a href="https://github.com/Rakshittips">
-<i class="fa-brands fa-github"></i>
-GitHub
-</a><a href="https://www.instagram.com/mr._rakshit_2.0?">
-<i class="fa-brands fa-instagram"></i>
-Instagram
-</a><a href="https://youtube.com/@mr._rakshit_2.0">
-<i class="fa-brands fa-youtube"></i>
-YouTuber
-</a>
-</div><p>
-© 2026 Rakshittips. All rights reserved.
-</p></div>
-</footer><script>
+
+<script>
+// Mobile Navigation Toggle
 const menuBtn = document.getElementById('menuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 
 menuBtn.addEventListener('click', () => {
   mobileMenu.classList.toggle('active');
-
   const icon = menuBtn.querySelector('i');
-
   if (mobileMenu.classList.contains('active')) {
-    icon.classList.remove('fa-bars');
-    icon.classList.add('fa-xmark');
+    icon.classList.replace('fa-bars', 'fa-xmark');
   } else {
-    icon.classList.remove('fa-xmark');
-    icon.classList.add('fa-bars');
+    icon.classList.replace('fa-xmark', 'fa-bars');
   }
 });
-</script></body>
+
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    const icon = menuBtn.querySelector('i');
+    if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
+  });
+});
+
+// Toast notification helper
+function showToast(text) {
+  const toast = document.getElementById('toastNotice');
+  const toastText = document.getElementById('toastText');
+  toastText.textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2300);
+}
+
+// =============================================================
+// THEME MANAGEMENT (Dark / High-Contrast Light Mode)
+// =============================================================
+const THEME_STORAGE_KEY = 'rakshittips-theme';
+
+function getCurrentTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+}
+
+function updateThemeUI(theme) {
+  const isLight = theme === 'light';
+  const themeModeText = document.getElementById('themeModeText');
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const mobileThemeStatusText = document.getElementById('mobileThemeStatusText');
+
+  if (themeModeText) {
+    themeModeText.textContent = isLight ? 'Light (Hi-Con)' : 'Dark';
+  }
+  if (themeToggleBtn) {
+    themeToggleBtn.setAttribute('aria-label', isLight ? 'Switch to Dark Mode' : 'Switch to High-Contrast Light Mode');
+    themeToggleBtn.setAttribute('title', isLight ? 'High-Contrast Light enabled. Click to switch to Dark.' : 'Dark Theme enabled. Click to switch to High-Contrast Light.');
+  }
+  if (mobileThemeStatusText) {
+    mobileThemeStatusText.textContent = isLight ? 'High-Contrast Light' : 'Dark Mode';
+  }
+}
+
+function setTheme(theme, showNotification = false) {
+  const isLight = theme === 'light';
+  if (isLight) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, isLight ? 'light' : 'dark');
+  } catch (e) {}
+
+  updateThemeUI(isLight ? 'light' : 'dark');
+
+  if (showNotification && typeof showToast === 'function') {
+    showToast(isLight ? '☀️ High-Contrast Light Mode Enabled' : '🌙 Dark Mode Enabled');
+  }
+}
+
+function toggleTheme() {
+  const current = getCurrentTheme();
+  setTheme(current === 'light' ? 'dark' : 'light', true);
+}
+
+// Bind Theme Toggle Buttons
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const mobileThemeToggleBtn = document.getElementById('mobileThemeToggleBtn');
+
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', toggleTheme);
+}
+if (mobileThemeToggleBtn) {
+  mobileThemeToggleBtn.addEventListener('click', toggleTheme);
+}
+
+// Sync across tabs
+window.addEventListener('storage', (e) => {
+  if (e.key === THEME_STORAGE_KEY && e.newValue) {
+    setTheme(e.newValue, false);
+  }
+});
+
+// Initialize UI on load
+updateThemeUI(getCurrentTheme());
+
+// =============================================================
+// TACTILE FEEDBACK (Silent helper)
+// =============================================================
+function playTactileFeedback() {}
+
+// Global Copy Text by Element ID with Visual & Audio Feedback
+function copyTextById(elementId, triggerBtn = null) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.textContent || el.innerText || el.value;
+  
+  const finishCopy = () => {
+    playTactileFeedback(660);
+    showToast('Copied: ' + (text.length > 25 ? text.substring(0, 25) + '...' : text));
+    const btn = triggerBtn || (window.event && window.event.currentTarget);
+    if (btn && btn.classList) {
+      btn.classList.add('copied');
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = originalHtml;
+      }, 1200);
+    }
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(finishCopy).catch(() => {
+      fallbackCopy(text);
+      finishCopy();
+    });
+  } else {
+    fallbackCopy(text);
+    finishCopy();
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+function copyUPI() {
+  const upi = 'rakshitdhakariya6@okhdfcbank';
+  navigator.clipboard.writeText(upi).then(() => {
+    playTactileFeedback(620);
+    showToast('UPI ID copied: ' + upi);
+  });
+}
+
+// -------------------------------------------------------------
+// TECH STACK EXPLORER
+// -------------------------------------------------------------
+const TECH_DETAILS = {
+  html5: {
+    title: 'HTML5 Semantic Web',
+    role: 'Core Frontend',
+    desc: 'Structured, clean markup powering high-speed landing pages, mod distribution portals, and lightweight web utilities.'
+  },
+  css3: {
+    title: 'Modern CSS3 & Glassmorphism',
+    role: 'Styling & UI Engine',
+    desc: 'Custom glassmorphism surfaces, GPU-composited animations, Syne typography, and mobile-first responsive architecture.'
+  },
+  js: {
+    title: 'Vanilla JavaScript (ES6+)',
+    role: 'Client-Side Logic',
+    desc: 'Zero-framework vanilla JS for maximum responsiveness, Web Crypto API hash computation, QR generation, and real-time text transformation.'
+  },
+  python: {
+    title: 'Python Automation',
+    role: 'Scripting & Bot Pipelines',
+    desc: 'Automation scripts for batch APK deconstruction, telegram bot notifications, media pipelines, and asset manipulation.'
+  },
+  nodejs: {
+    title: 'Node.js Runtime',
+    role: 'Backend & Tooling',
+    desc: 'Lightweight Express static server, build pipelines, dependency management, and production distribution.'
+  },
+  android: {
+    title: 'Android Framework & Smali',
+    role: 'Modding & Bytecode',
+    desc: 'APK reverse engineering, Dalvik bytecode (smali) editing, AndroidManifest modifications, and layout XML theming.'
+  },
+  github: {
+    title: 'Git & GitHub Actions',
+    role: 'Version Control & CI/CD',
+    desc: 'Automated static deployments, open-source repositories, release management, and issue tracking for community tools.'
+  },
+  tools: {
+    title: 'Smali / Dex / Decompiler Suite',
+    role: 'Modding Infrastructure',
+    desc: 'Deep bytecode editing using APKTool, JADX, Dex2Jar, and custom patchers to craft refined Instagram & Telegram experiences.'
+  }
+};
+
+function inspectTech(key, elem) {
+  document.querySelectorAll('.tech-item').forEach(i => i.classList.remove('active'));
+  elem.classList.add('active');
+
+  const data = TECH_DETAILS[key] || TECH_DETAILS.html5;
+  document.getElementById('techTitle').textContent = data.title;
+  document.getElementById('techRole').textContent = data.role;
+  document.getElementById('techDesc').textContent = data.desc;
+}
+
+// -------------------------------------------------------------
+// PROJECT MODALS
+// -------------------------------------------------------------
+const PROJECT_MODAL_DATA = {
+  instagram: {
+    title: 'instaGram Pro',
+    badge: 'v31.2 • Latest Stable',
+    icon: 'fa-brands fa-instagram',
+    color: 'pink',
+    desc: 'The ultimate Instagram modification for Android, built for creators who want iOS aesthetics, true 4K media downloads, and robust privacy protections.',
+    features: [
+      { icon: 'fa-solid fa-apple-whole', text: 'Native iOS 18 Emoji support rendered across all stories, comments & DMs' },
+      { icon: 'fa-solid fa-eye-slash', text: 'Ghost Mode: View stories anonymously, hide typing indicator & hide seen ticks' },
+      { icon: 'fa-solid fa-cloud-arrow-down', text: 'One-Tap 4K Media Downloader: Save Reels, Carousel posts & Stories directly to gallery' },
+      { icon: 'fa-solid fa-ban', text: 'Ad Blocker: Removes all sponsored stories, feed advertisements & suggested reels' },
+      { icon: 'fa-solid fa-bolt', text: '60FPS Upload Booster: Forces high-bitrate media upload for crisp Instagram Stories' },
+      { icon: 'fa-solid fa-user-xmark', text: 'Unfollowers Tracker: Know who unfollowed you right inside your profile' }
+    ],
+    links: [
+      { href: 'https://insta-gram-pro.vercel.app/', label: 'Visit Web Showcase', primary: true },
+      { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Telegram Release Channel', primary: false }
+    ]
+  },
+  mrgram: {
+    title: 'MRGram iPhone Edition',
+    badge: 'v10.8 • iOS Experience',
+    icon: 'fa-brands fa-telegram',
+    color: 'blue',
+    desc: 'Transform your Telegram Android into an authentic iOS experience. Features Apple SF Pro fonts, iOS tab bar, smooth haptics, and exclusive creator features.',
+    features: [
+      { icon: 'fa-solid fa-sliders', text: 'Authentic iOS Blur & Tabbar: Bottom navigation bar with glass frosted blurs' },
+      { icon: 'fa-solid fa-font', text: 'Apple SF Pro Display Font integration system-wide in chats' },
+      { icon: 'fa-solid fa-thumbtack', text: 'Unlimited Pinned Chats & Folder Customization without Telegram Premium' },
+      { icon: 'fa-solid fa-language', text: 'Instant In-Chat Translator for 100+ languages without leaving chat' },
+      { icon: 'fa-solid fa-microphone', text: 'Voice Message Modifier: 6 custom filters for audio voice notes' },
+      { icon: 'fa-solid fa-shield', text: 'Anti-Delete Messages: Read messages and view media even if sender deletes them' }
+    ],
+    links: [
+      { href: 'https://mrgram-inky.vercel.app/', label: 'Try MRGram Web', primary: true },
+      { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Download APK Channel', primary: false }
+    ]
+  }
+};
+
+function openProjectModal(key) {
+  const data = PROJECT_MODAL_DATA[key];
+  if (!data) return;
+
+  const content = document.getElementById('modalContent');
+  content.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+      <div class="icon-box ${data.color}" style="margin-bottom:0;width:58px;height:58px;border-radius:18px;">
+        <i class="${data.icon}"></i>
+      </div>
+      <div>
+        <h3 style="font-size:1.4rem;font-weight:700;">${data.title}</h3>
+        <span class="badge-tag ${data.color}" style="position:static;display:inline-block;margin-top:4px;">${data.badge}</span>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-size:.95rem;line-height:1.6;">${data.desc}</p>
+    
+    <h4 style="font-size:.92rem;text-transform:uppercase;letter-spacing:.5px;color:#fff;margin-top:22px;">Mod Key Features</h4>
+    <ul class="modal-feature-list">
+      ${data.features.map(f => `<li><i class="${f.icon}"></i><span>${f.text}</span></li>`).join('')}
+    </ul>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;">
+      ${data.links.map(l => `
+        <a href="${l.href}" target="_blank" rel="noopener" class="btn ${l.primary ? 'btn-primary' : 'btn-secondary'}">
+          ${l.label} <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      `).join('')}
+    </div>
+  `;
+
+  document.getElementById('projectModal').classList.add('open');
+}
+
+function closeProjectModal() {
+  document.getElementById('projectModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeProjectModal();
+  }
+});
+
+// Window Scroll Listener for Reading Progress and Active Section Highlighting
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+  const bar = document.getElementById('scrollProgressBar');
+  if (bar) bar.style.width = scrollPercent + '%';
+
+  // Active navigation indicator
+  const sections = ['about', 'projects', 'stack', 'goals'];
+  const navHeight = 90;
+  let currentSec = '';
+
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top;
+      if (top <= navHeight + 80) {
+        currentSec = id;
+      }
+    }
+  }
+
+  if (currentSec) {
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href === '#' + currentSec) {
+        a.classList.add('nav-active');
+      } else if (href && href.startsWith('#')) {
+        a.classList.remove('nav-active');
+      }
+    });
+  }
+}, { passive: true });
+
+// Auto-navigate on URL hash if specified
+window.addEventListener('DOMContentLoaded', () => {
+  // Scroll Reveal Observer
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+});
+</script>
+</body>
 </html>

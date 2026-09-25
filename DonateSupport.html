@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Support Rakshittips</title>
+<script>
+  (function() {
+    try {
+      const savedTheme = localStorage.getItem('rakshittips-theme');
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    } catch(e) {}
+  })();
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,6 +36,77 @@
     --ease-ios: cubic-bezier(0.32,0.72,0,1);
     --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
     --ease-out: cubic-bezier(0.22,1,0.36,1);
+  }
+
+  [data-theme="light"]{
+    --bg:#f8fafc;
+    --glass:#ffffff;
+    --glass-hover:#f1f5f9;
+    --glass-border:rgba(15,23,42,0.16);
+    --glass-border-hi:rgba(219,39,119,0.7);
+    --glass-sheen:rgba(0,0,0,0.04);
+    --text:#090d16;
+    --text-dim:#334155;
+    --grad: linear-gradient(120deg,#6d28d9 0%,#be185d 55%,#ea580c 100%);
+    --grad-soft: linear-gradient(120deg,rgba(109,40,217,0.12),rgba(190,24,93,0.12) 55%,rgba(234,88,12,0.1));
+  }
+
+  [data-theme="light"] body::before{
+    opacity:.12;
+  }
+
+  [data-theme="light"] .brand{
+    color:#090d16;
+  }
+
+  [data-theme="light"] .lang-modal{
+    background:#ffffff;
+    box-shadow:0 -12px 40px -12px rgba(0,0,0,0.2);
+  }
+
+  [data-theme="light"] .upi-id{
+    background:#f1f5f9;
+    color:#0052cc;
+    border:1px solid rgba(15,23,42,0.15);
+  }
+
+  [data-theme="light"] .amount-card{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,0.15);
+  }
+
+  [data-theme="light"] .amount-card:has(input:checked){
+    border-color:#be185d;
+    background:#fdf2f8;
+  }
+
+  [data-theme="light"] .stat{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,0.15);
+  }
+
+  [data-theme="light"] .stat .num{
+    color:#090d16;
+  }
+
+  [data-theme="light"] .method{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,0.15);
+  }
+
+  [data-theme="light"] .method .name{
+    color:#090d16;
+  }
+
+  [data-theme="light"] .upi-card{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,0.15);
+  }
+
+  [data-theme="light"] .custom-amt input{
+    background:#ffffff;
+    border:1.5px solid rgba(15,23,42,0.2);
+    color:#090d16;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -498,15 +581,20 @@
   <div class="wrap">
 
     <div class="header-row">
-      <div class="brand"><span class="dot"></span>Rakshittips!</div>
-      <button class="lang-btn" id="langBtn" aria-haspopup="dialog" aria-label="Switch language" title="Switch language">
-        <i class="fa-solid fa-language"></i>
-      </button>
+      <a href="/" class="brand" style="text-decoration:none;color:inherit;"><span class="dot"></span>Rakshittips!</a>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="lang-btn" id="themeToggleBtn" aria-label="Toggle theme" title="Switch Theme (Dark / High-Contrast Light)">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+        <button class="lang-btn" id="langBtn" aria-haspopup="dialog" aria-label="Switch language" title="Switch language">
+          <i class="fa-solid fa-language"></i>
+        </button>
+      </div>
     </div>
 
     <div class="hero">
       <h1 data-i18n="heroTitle">Keep the mods coming</h1>
-      <p data-i18n="heroP">Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the work going.</p>
+      <p data-i18n="heroP">Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the development going.</p>
     </div>
 
     <div class="stats">
@@ -543,7 +631,7 @@
         <div class="label" data-i18n="upiIdLabel">UPI ID</div>
         <div class="upi-id" id="upiId">rakshitdhakariya6@oksbi</div>
         <div class="upi-apps">
-          <span class="apps-label" data-i18n="worksWith">Works with</span>
+          <span class="apps-label" data-i18n="worksWith">Supported by</span>
           <span class="app-badge phonepe">PhonePe</span>
           <span class="app-badge gpay">GPay</span>
           <span class="app-badge bhim">BHIM</span>
@@ -686,14 +774,33 @@
   function copyId(idEl, btnEl){
     const id = document.getElementById(idEl).textContent;
     const btn = document.getElementById(btnEl);
-    navigator.clipboard.writeText(id).then(()=>{
+    const finishCopy = () => {
       btn.classList.add('copied');
       btn.querySelector('span').textContent = 'Copied';
       setTimeout(()=>{
         btn.classList.remove('copied');
         btn.querySelector('span').textContent = 'Copy ID';
       },1800);
-    });
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(id).then(finishCopy).catch(() => {
+        fallbackCopy(id);
+        finishCopy();
+      });
+    } else {
+      fallbackCopy(id);
+      finishCopy();
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
   }
 
   /* ---------- Language switcher ---------- */
@@ -718,7 +825,7 @@
   const I18N = {
     en:{ switchLanguage:'Switch Language', switchLanguageDesc:"Change the website's display language",
       heroTitle:'Keep the mods coming',
-      heroP:"Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the work going.",
+      heroP:"Every build, patch, and landing page here is made solo — no team, no ad budget. If something I've made saved you time or unlocked a feature you wanted, a small contribution keeps the development going.",
       statSolo:'Solo-built', statFree:'Free', statAllReleases:'All releases', statNoAds:'No ads', statEver:'Ever',
       waysToSupport:'Ways to support', upiDesc:'Instant, no fees — scan below or use the ID',
       paypalDesc:'One-time or recurring, international', coffeeDesc:'Quick one-off support',
@@ -918,6 +1025,30 @@
 
   const savedLang = localStorage.getItem('rakshittips-lang') || 'en';
   applyLanguage(savedLang);
+
+  // Theme Toggle for Support Page
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  function updateSupportThemeUI(theme) {
+    const isLight = theme === 'light';
+    if (themeIcon) {
+      themeIcon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      themeIcon.style.color = isLight ? '#d97706' : '#b794f6';
+    }
+  }
+  function toggleSupportTheme() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const next = isLight ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('rakshittips-theme', next);
+    } catch(e) {}
+    updateSupportThemeUI(next);
+  }
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleSupportTheme);
+  }
+  updateSupportThemeUI(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
 </script>
 </body>
 </html>
