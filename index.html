@@ -365,6 +365,8 @@ section{
 .purple{background:rgba(155,123,255,.14);color:var(--purple)}
 .pink{background:rgba(255,108,171,.14);color:var(--pink)}
 .green{background:rgba(66,211,146,.14);color:var(--green)}
+.cyan{background:rgba(56,189,248,.14);color:#38bdf8}
+.orange{background:rgba(249,115,22,.14);color:#f97316}
 
 .projects{
   grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
@@ -392,6 +394,9 @@ section{
 .badge-tag.pink{background:rgba(255,108,171,.15);color:var(--pink);border:1px solid rgba(255,108,171,.3)}
 .badge-tag.blue{background:rgba(110,168,254,.15);color:var(--blue);border:1px solid rgba(110,168,254,.3)}
 .badge-tag.green{background:rgba(66,211,146,.15);color:var(--green);border:1px solid rgba(66,211,146,.3)}
+.badge-tag.purple{background:rgba(155,123,255,.15);color:var(--purple);border:1px solid rgba(155,123,255,.3)}
+.badge-tag.cyan{background:rgba(56,189,248,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.35)}
+.badge-tag.orange{background:rgba(249,115,22,.15);color:#f97316;border:1px solid rgba(249,115,22,.35)}
 
 .project-card h3{
   font-size:1.3rem;
@@ -1072,6 +1077,26 @@ section{
   border-color:rgba(4,120,87,.4);
 }
 
+[data-theme="light"] .badge-tag.purple{
+  background:rgba(109,40,217,.12);
+  color:#6d28d9;
+  border-color:rgba(109,40,217,.4);
+}
+
+[data-theme="light"] .cyan{background:rgba(2,132,199,.12);color:#0284c7}
+[data-theme="light"] .badge-tag.cyan{
+  background:rgba(2,132,199,.12);
+  color:#0284c7;
+  border-color:rgba(2,132,199,.4);
+}
+
+[data-theme="light"] .orange{background:rgba(234,88,12,.12);color:#ea580c}
+[data-theme="light"] .badge-tag.orange{
+  background:rgba(234,88,12,.12);
+  color:#ea580c;
+  border-color:rgba(234,88,12,.4);
+}
+
 [data-theme="light"] .btn-modal-trigger{
   background:#f1f5f9;
   border:1.5px solid rgba(15,23,42,.18);
@@ -1412,6 +1437,63 @@ section{
           </button>
           <a href="https://mrgram-inky.vercel.app/" target="_blank" rel="noopener" class="project-link">
             Try Now <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag purple">V2.0.1 • Music Player</span>
+        <div class="icon-box purple">
+          <i class="fa-solid fa-music"></i>
+        </div>
+        <h3>MRTune</h3>
+        <p>
+          A privacy-friendly, browser-based music streaming player featuring local playlists, liquid glass UI, background audio, and distraction-free playback.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('mrtune')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://rakshittips.github.io/MRTune" target="_blank" rel="noopener" class="project-link">
+            Launch App <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag cyan">V2 • iOS Launcher</span>
+        <div class="icon-box cyan">
+          <i class="fa-brands fa-apple"></i>
+        </div>
+        <h3>MRiOS Launcher</h3>
+        <p>
+          Futuristic iPhone Style-UI launcher for Android featuring translucent MRiOS Glass design, smart app library, spotlight search, and widgets.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('mrios')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://rakshittips.github.io/MRiOS-Launcher/index.html" target="_blank" rel="noopener" class="project-link">
+            Launch Showcase <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag orange">V1 • Liquid UI</span>
+        <div class="icon-box orange">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <h3>MRiMods Launcher</h3>
+        <p>
+          Rebuilds Android home screen with iOS 27 Liquid icon pack, dynamic frosted dock, Siri-style suggestions, and lock-screen music widget.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('mrimods')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://rakshittips.github.io/MRiMods-Launcher/index.html" target="_blank" rel="noopener" class="project-link">
+            Launch Showcase <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         </div>
       </div>
@@ -1852,6 +1934,63 @@ const PROJECT_MODAL_DATA = {
       { href: 'https://mrgram-inky.vercel.app/', label: 'Try MRGram Web', primary: true },
       { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Download APK Channel', primary: false }
     ]
+  },
+  mrtune: {
+    title: 'MRTune Music Player',
+    badge: 'v2.0.1 • Web App',
+    icon: 'fa-solid fa-music',
+    color: 'purple',
+    desc: 'A privacy-friendly, browser-based music streaming player featuring local playlists, liquid glass UI, background audio playback, and distraction-free audio streaming.',
+    features: [
+      { icon: 'fa-solid fa-headphones', text: 'Distraction-free high fidelity music streaming with zero intrusive advertisements' },
+      { icon: 'fa-solid fa-wand-magic-sparkles', text: 'Liquid Glass Interface with fluid animations, glowing playback bar & responsive UI' },
+      { icon: 'fa-solid fa-list-check', text: 'Custom Local Playlists, saved favorites & custom audio queue saved in browser' },
+      { icon: 'fa-solid fa-shield-halved', text: '100% Privacy-friendly: No tracking, tracking pixels, or mandatory account logins' },
+      { icon: 'fa-solid fa-mobile-screen', text: 'PWA & Mobile-ready with background media playback and lockscreen media session' },
+      { icon: 'fa-solid fa-bolt', text: 'Ultra-lightweight engine with instant track search and smooth playback transitions' }
+    ],
+    links: [
+      { href: 'https://rakshittips.github.io/MRTune', label: 'Launch MRTune Web', primary: true },
+      { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Telegram Community', primary: false }
+    ]
+  },
+  mrios: {
+    title: 'MRiOS Launcher V2',
+    badge: 'V2 • iPhone Style-UI',
+    icon: 'fa-brands fa-apple',
+    color: 'cyan',
+    desc: 'A smart, clean, and beautiful Android launcher inspired by futuristic iOS glass design — featuring premium translucency, wallpaper depth effects, and buttery-smooth responsiveness without root.',
+    features: [
+      { icon: 'fa-solid fa-layer-group', text: 'Futuristic MRiOS Glass Interface: Translucent layers with depth effects that react to your wallpaper' },
+      { icon: 'fa-solid fa-cubes-stacked', text: 'Smart App Library: Auto-sorts apps into intuitive categories (Social, Games, Productivity, Utilities)' },
+      { icon: 'fa-solid fa-wand-magic-sparkles', text: 'Custom Glass Widgets: Integrated Weather, Clock, and Calendar widgets styled for MRiOS' },
+      { icon: 'fa-solid fa-magnifying-glass', text: 'Swipe-Down Spotlight Search: Instant app indexing and launch gesture with zero lag' },
+      { icon: 'fa-solid fa-shield-halved', text: 'Safe & Private Hidden Folder: Keep sensitive apps password-protected without root access' },
+      { icon: 'fa-solid fa-sliders', text: 'Effortless Personalization: Quick icon swap, rename apps, and live wallpaper preview engine' }
+    ],
+    links: [
+      { href: 'https://rakshittips.github.io/MRiOS-Launcher/index.html', label: 'Open Launcher Web Showcase', primary: true },
+      { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Get APK on Telegram', primary: false }
+    ]
+  },
+  mrimods: {
+    title: 'MRiMods Launcher V1',
+    badge: 'V1 • Liquid Glass Mod',
+    icon: 'fa-solid fa-wand-magic-sparkles',
+    color: 'orange',
+    desc: 'Transform your Android home screen with iOS 27 Liquid icon pack aesthetics — featuring frosted refractive surfaces, predictive Siri suggestion dock row, lock-screen music widget, and ultra-smooth gestures.',
+    features: [
+      { icon: 'fa-solid fa-droplet', text: 'iOS 27 Liquid Icon Pack: Frosted, refractive glass surfaces across icons, dock, and control sheets' },
+      { icon: 'fa-solid fa-lightbulb', text: 'Siri Suggestion Row: Predictive app row surfaced above dock with one-tap search history' },
+      { icon: 'fa-solid fa-music', text: 'iOS Music Widget: Lock-screen style now-playing card with real-time media controls' },
+      { icon: 'fa-solid fa-fingerprint', text: 'iPhone Quick Options: Long-press haptic context menus on icons and folders' },
+      { icon: 'fa-solid fa-bolt', text: 'Native Gesture Tuning: Smooth spring physics and 60FPS fluid transitions tuned to iOS 27 timing curves' },
+      { icon: 'fa-solid fa-microchip', text: 'Lightweight & Efficient: Optimized performance budget with zero bloat and minimal battery draw' }
+    ],
+    links: [
+      { href: 'https://rakshittips.github.io/MRiMods-Launcher/index.html', label: 'Open Launcher Web Showcase', primary: true },
+      { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Download APK Channel', primary: false }
+    ]
   }
 };
 
@@ -1948,6 +2087,13 @@ window.addEventListener('DOMContentLoaded', () => {
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  const hash = window.location.hash.replace('#', '');
+  if (['instagram', 'mrgram', 'mrtune', 'mrios', 'mrios-launcher', 'mrimods', 'mrimods-launcher'].includes(hash)) {
+    if (hash.startsWith('mrimods')) openProjectModal('mrimods');
+    else if (hash.startsWith('mrios')) openProjectModal('mrios');
+    else openProjectModal(hash);
+  }
 });
 </script>
 </body>
