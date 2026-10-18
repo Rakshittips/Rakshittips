@@ -367,6 +367,7 @@ section{
 .green{background:rgba(66,211,146,.14);color:var(--green)}
 .cyan{background:rgba(56,189,248,.14);color:#38bdf8}
 .orange{background:rgba(249,115,22,.14);color:#f97316}
+.red{background:rgba(244,63,94,.14);color:#f43f5e}
 
 .projects{
   grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
@@ -397,6 +398,7 @@ section{
 .badge-tag.purple{background:rgba(155,123,255,.15);color:var(--purple);border:1px solid rgba(155,123,255,.3)}
 .badge-tag.cyan{background:rgba(56,189,248,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.35)}
 .badge-tag.orange{background:rgba(249,115,22,.15);color:#f97316;border:1px solid rgba(249,115,22,.35)}
+.badge-tag.red{background:rgba(244,63,94,.15);color:#f43f5e;border:1px solid rgba(244,63,94,.35)}
 
 .project-card h3{
   font-size:1.3rem;
@@ -1097,6 +1099,13 @@ section{
   border-color:rgba(234,88,12,.4);
 }
 
+[data-theme="light"] .red{background:rgba(225,29,72,.12);color:#e11d48}
+[data-theme="light"] .badge-tag.red{
+  background:rgba(225,29,72,.12);
+  color:#e11d48;
+  border-color:rgba(225,29,72,.4);
+}
+
 [data-theme="light"] .btn-modal-trigger{
   background:#f1f5f9;
   border:1.5px solid rgba(15,23,42,.18);
@@ -1404,7 +1413,7 @@ section{
     </div>
     <div class="grid projects">
       <div class="card project-card">
-        <span class="badge-tag pink">v31.2 • Active</span>
+        <span class="badge-tag pink">V15.75 • Active</span>
         <div class="icon-box pink">
           <i class="fa-brands fa-instagram"></i>
         </div>
@@ -1423,7 +1432,7 @@ section{
       </div>
 
       <div class="card project-card">
-        <span class="badge-tag blue">v10.8 • iOS UI</span>
+        <span class="badge-tag blue">V17 • iOS UI</span>
         <div class="icon-box blue">
           <i class="fa-brands fa-telegram"></i>
         </div>
@@ -1494,6 +1503,25 @@ section{
           </button>
           <a href="https://rakshittips.github.io/MRiMods-Launcher/index.html" target="_blank" rel="noopener" class="project-link">
             Launch Showcase <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card project-card">
+        <span class="badge-tag red">V1.1.0 • Offline PDF Suite</span>
+        <div class="icon-box red">
+          <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <h3>Mr PDFKit</h3>
+        <p>
+          Privacy-first offline document engineering suite. Merge, split, compress, organize, convert, and protect PDFs 100% locally with Zero-Server architecture.
+        </p>
+        <div class="project-actions">
+          <button class="btn-modal-trigger" onclick="openProjectModal('pdfkit')">
+            <i class="fa-solid fa-circle-info"></i> Details & Features
+          </button>
+          <a href="https://rakshittips.github.io/Mr-PDFKit/index.html" target="_blank" rel="noopener" class="project-link">
+            Launch App <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         </div>
       </div>
@@ -1899,7 +1927,7 @@ function inspectTech(key, elem) {
 const PROJECT_MODAL_DATA = {
   instagram: {
     title: 'instaGram Pro',
-    badge: 'v31.2 • Latest Stable',
+    badge: 'V15.75 • Active',
     icon: 'fa-brands fa-instagram',
     color: 'pink',
     desc: 'The ultimate Instagram modification for Android, built for creators who want iOS aesthetics, true 4K media downloads, and robust privacy protections.',
@@ -1918,7 +1946,7 @@ const PROJECT_MODAL_DATA = {
   },
   mrgram: {
     title: 'MRGram iPhone Edition',
-    badge: 'v10.8 • iOS Experience',
+    badge: 'V17 • iOS UI',
     icon: 'fa-brands fa-telegram',
     color: 'blue',
     desc: 'Transform your Telegram Android into an authentic iOS experience. Features Apple SF Pro fonts, iOS tab bar, smooth haptics, and exclusive creator features.',
@@ -1990,6 +2018,25 @@ const PROJECT_MODAL_DATA = {
     links: [
       { href: 'https://rakshittips.github.io/MRiMods-Launcher/index.html', label: 'Open Launcher Web Showcase', primary: true },
       { href: 'https://t.me/Mr_Rakshit_2_0', label: 'Download APK Channel', primary: false }
+    ]
+  },
+  pdfkit: {
+    title: 'Mr PDFKit V1.1.0',
+    badge: 'V1.1.0 • Local PDF Suite',
+    icon: 'fa-solid fa-file-pdf',
+    color: 'red',
+    desc: 'A privacy-first offline document engineering suite. Open, read, merge, split, compress, rotate, organize, convert, protect, sign, and edit PDFs 100% locally on your device with Zero-Server architecture.',
+    features: [
+      { icon: 'fa-solid fa-shield-halved', text: '100% In-Browser Execution: Zero server uploads, WebAssembly-powered, documents never leave your device' },
+      { icon: 'fa-solid fa-layer-group', text: '20+ Professional PDF Tools: Merge, split, compress, rotate, watermark, page reorder & crop' },
+      { icon: 'fa-solid fa-lock', text: 'Document Security & Sign: Password encryption, unlock protected PDFs, and digital signatures' },
+      { icon: 'fa-solid fa-file-export', text: 'Conversion Engine: Convert PDF to high-res images, images to PDF, text extraction, and export' },
+      { icon: 'fa-solid fa-bolt', text: 'Ultra-Fast Performance: Multi-threaded Web Workers deliver instant local processing' },
+      { icon: 'fa-solid fa-mobile-screen-button', text: 'Responsive & Offline PWA: Works completely offline on mobile, tablet, and desktop' }
+    ],
+    links: [
+      { href: 'https://rakshittips.github.io/Mr-PDFKit/index.html', label: 'Open Mr PDFKit Web App', primary: true },
+      { href: 'https://github.com/Rakshittips/Mr-PDFKit', label: 'GitHub Repository', primary: false }
     ]
   }
 };
@@ -2089,9 +2136,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   const hash = window.location.hash.replace('#', '');
-  if (['instagram', 'mrgram', 'mrtune', 'mrios', 'mrios-launcher', 'mrimods', 'mrimods-launcher'].includes(hash)) {
+  if (['instagram', 'mrgram', 'mrtune', 'mrios', 'mrios-launcher', 'mrimods', 'mrimods-launcher', 'pdfkit', 'mr-pdfkit'].includes(hash)) {
     if (hash.startsWith('mrimods')) openProjectModal('mrimods');
     else if (hash.startsWith('mrios')) openProjectModal('mrios');
+    else if (hash.startsWith('pdfkit') || hash === 'mr-pdfkit') openProjectModal('pdfkit');
     else openProjectModal(hash);
   }
 });
